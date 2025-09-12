@@ -16,8 +16,6 @@ sar_model <- lagsarlm(
     listw = w
 )
 
-summary(sar_model)
-
 complete_df_coords <- cbind(raw_complete_df$x_coord, raw_complete_df$y_coord)
 complete_df_knn <- knearneigh(complete_df_coords, k=4)
 complete_df_w <- nb2listw(knn2nb(complete_df_knn))
