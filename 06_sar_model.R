@@ -1,27 +1,35 @@
+# Imports
 library(spatialreg)
 library(spdep)
 library(sf)
 
-raw_complete_df <- read.csv("datasets/split/complete_df.csv")
-raw_train_df <- read.csv("datasets/split/train_df.csv")
-raw_test_df <- read.csv("datasets/split/test_df.csv")
+# Load data
+complete_df <- st_read("datasets/3_combined/df.gpkg")
+train_df <- st_read("datasets/4_split/train_df.gpkg")
+test_df <- st_read("datasets/4_split/test_df.gpkg")
 
-coords <- cbind(raw_train_df$x_coord, raw_train_df$y_coord)
-knn <- knearneigh(coords, k=4)
-w <- nb2listw(knn2nb(knn))
+# Create spatial weight matrix for train_df
+coords <- cbind(train_df$x_coord, train_df$y_coord) # Create coordinate feature
+knn <- knearneigh(coords, k=4)  # Calculate k nearest neighbours using coords
+w <- nb2listw(knn2nb(knn))  # Calculate weights
 
+# Fit SAR model using spatial weights
 sar_model <- lagsarlm(
-    very_good_health ~ greenspace_proportion + imd,
-    data = raw_train_df,
-    listw = w
+  very_good_health ~ greenspace_proportion + imd,
+  data = train_df,
+  listw = w
 )
 
-complete_df_coords <- cbind(raw_complete_df$x_coord, raw_complete_df$y_coord)
+# Create spatial weight matrix for complete_df
+complete_df_coords <- cbind(complete_df$x_coord, complete_df$y_coord)
 complete_df_knn <- knearneigh(complete_df_coords, k=4)
 complete_df_w <- nb2listw(knn2nb(complete_df_knn))
 
-predictions <- predict(sar_model, raw_test_df, listw = complete_df_w)
+# Calculate predictions
+predictions <- predict(sar_model, test_df, listw = complete_df_w)
 
-raw_test_df$sar_predictions <- predictions
+# Add predicted values to test_df
+test_df$sar_predictions <- predictions
 
-write.csv(raw_test_df, "datasets/results/test_df_sar.csv", row.names = FALSE)
+# Save output
+write.csv(test_df, "datasets/results/test_df_sar.csv", row.names = FALSE)

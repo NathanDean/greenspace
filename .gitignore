@@ -12,7 +12,8 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Large datasets
-/datasets/initial_ua_dataset
+datasets/
+
 
 # OS files
 .DS_Store
