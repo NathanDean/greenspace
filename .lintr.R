@@ -1,0 +1,4 @@
+linters <- linters_with_defaults(
+  trailing_whitespace_linter = NULL,
+  line_length_linter = NULL
+)
