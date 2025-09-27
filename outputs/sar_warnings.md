@@ -164,3 +164,108 @@ Hessian: rho: 0.3424633 function value: 7401.728
 Hessian: rho: 0.3424633 function value: 7401.728
 Hessian: rho: 0.3424633 function value: 7401.728
 Hessian: rho: 0.3424633 function value: 7401.728
+
+# With feature engineering
+
+> # Build model
+>
+> model <- build_model(train_df)
+> [1] "Creating spatial weight matrix for training df..."
+> [1] "Fitting model..."
+
+Spatial lag model
+Warning in lagsarlm(very_good_health ~ ., data = df, listw = w, quiet = FALSE, :
+Aliased variables found: prevalent_white_otherTRUE
+Jacobian calculated using neighbourhood matrix eigenvalues
+Computing eigenvalues ...
+
+rho: -0.4728035 function value: 5657.393
+rho: 0.08975737 function value: 7025.825
+rho: 0.4374391 function value: 7593.576
+rho: 0.08975737 function value: 7025.825
+rho: 0.4374391 function value: 7593.576
+rho: 0.6523183 function value: 7622.78
+rho: 0.570414 function value: 7651.455
+rho: 0.5634709 function value: 7651.48
+rho: 0.5664794 function value: 7651.513
+rho: 0.5664595 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.566469 function value: 7651.513
+rho: 0.566465 function value: 7651.513
+rho: 0.5664634 function value: 7651.513
+rho: 0.5664629 function value: 7651.513
+rho: 0.5664626 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+Warning in lagsarlm(very_good_health ~ ., data = df, listw = w, quiet = FALSE, :
+inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16
+reciprocal condition number = 1.3291e-19 - using numerical Hessian.
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664659 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+
+...
+
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Error in solve.default(-(mat), tol.solve = tol.solve) :
+system is computationally singular: reciprocal condition number = 1.12396e-20
+Timing stopped at: 146.2 0.65 147.9
+
+# With prevalent_white_other removed
+
+> model <- build_model(train_df)
+> [1] "Creating spatial weight matrix for training df..."
+> [1] "Fitting model..."
+
+Spatial lag model
+Jacobian calculated using neighbourhood matrix eigenvalues
+Computing eigenvalues ...
+
+rho: -0.4728035 function value: 5657.393
+rho: 0.08975737 function value: 7025.825
+rho: 0.4374391 function value: 7593.576
+rho: 0.6523183 function value: 7622.78
+rho: 0.570414 function value: 7651.455
+rho: 0.5634709 function value: 7651.48
+rho: 0.5664794 function value: 7651.513
+rho: 0.5664595 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.566469 function value: 7651.513
+rho: 0.566465 function value: 7651.513
+rho: 0.5664634 function value: 7651.513
+rho: 0.5664629 function value: 7651.513
+rho: 0.5664626 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+rho: 0.5664625 function value: 7651.513
+Warning in lagsarlm(very_good_health ~ ., data = df, listw = w, quiet = FALSE, :
+inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16
+reciprocal condition number = 1.3291e-19 - using numerical Hessian.
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664659 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+
+...
+
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Hessian: rho: 0.5664625 function value: 7651.513
+Error in solve.default(-(mat), tol.solve = tol.solve) :
+system is computationally singular: reciprocal condition number = 1.12396e-20
+Timing stopped at: 137.4 0.44 138.5
