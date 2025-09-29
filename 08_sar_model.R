@@ -18,7 +18,7 @@ folds <- unique(fold_ids)
 drop_cols <- c("fold_id_python", "fold_id_r")
 df <- df[, !names(df) %in% drop_cols]
 
-# Function to create spatial weight matrix
+# Define spatial weight calculation function
 create_spatial_weights <- function(df) {
 
   coords <- cbind(df$x_coord, df$y_coord)   # Create coordinate feature
@@ -30,18 +30,18 @@ create_spatial_weights <- function(df) {
 
 }
 
-# Function to build model
+# Define build model function
 build_model <- function(df) {
 
   # Create spatial weight matrix for train_df
-  print("Creating spatial weight matrix for training df...")
+  print("Creating spatial weight matrix for train_df...")
   w <- create_spatial_weights(df)
 
   # Fit SAR model using spatial weights
   print("Fitting model...")
   system.time(
     sar_model <- lagsarlm(
-      very_good_health ~ . - x_coord - y_coord,   # Predict very_good_health as a function of all other features
+      very_good_health ~ . - x_coord - y_coord,   # Predict very_good_health as a function of all other features apart from coords
       data = df,
       listw = w,    # Spatial weights to calculate lagged dependent variable
       method = "LU",    # Use LU decomposition to calculate lagged dependent variable
@@ -54,6 +54,7 @@ build_model <- function(df) {
   
 }
 
+# Cross-validation loop
 for (fold in folds) {
 
   message <- paste("--- Training on fold ", fold, "---")
@@ -66,11 +67,11 @@ for (fold in folds) {
   validation_df <- df[is_in_validation_set, ]
   rownames(validation_df) <- NULL   # Reset row numbers so they align with spatial weight matrix for predictions
 
-  # Build model on train_df
+  # Build model using train_df
   model <- build_model(train_df)
   
   # Create spatial weight matrix for validation_df
-  print("Creating spatial weight matrix for validation df...")
+  print("Creating spatial weight matrix for validation_df...")
   validation_w <- create_spatial_weights(validation_df)
 
   # Calculate predictions on validation_df

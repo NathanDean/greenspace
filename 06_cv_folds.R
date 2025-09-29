@@ -2,10 +2,10 @@
 library(blockCV)
 library(sf)
 
-# Set randomness seed
+# Set random seed
 set.seed(42)
 
-# Load data and convert to spatial dataframe
+# Load data and convert to spatial dataframes
 df_full <- read.csv("datasets/4_fe/df_full.csv")
 df_full$x <- df_full$x_coord
 df_full$y <- df_full$y_coord
@@ -23,14 +23,6 @@ df_low_vif$x <- df_low_vif$x_coord
 df_low_vif$y <- df_low_vif$y_coord
 df_low_vif <- st_as_sf(df_low_vif, coords = c("x", "y"))
 st_crs(df_low_vif) <- "EPSG:3035"
-
-# # Split data into train/test sets
-# training_indices <- sample(
-#   nrow(complete_df),
-#   size = 0.8 * nrow(complete_df)
-# )
-# train_df <- complete_df[training_indices, ]
-# test_df <- complete_df[-training_indices, ]
 
 # Measure distance of spatial autocorrelation for very_good_health
 autocorrelation_info <- cv_spatial_autocor(
@@ -50,7 +42,7 @@ cv_folds <- cv_spatial(
   iteration = 100
 )
 
-# Add fold allocation to train_df rows
+# Add fold allocations to dfs
 df_full$fold_id_r <- cv_folds$folds_ids            # R indexes from 1
 df_fe$fold_id_r <- cv_folds$folds_ids
 df_low_vif$fold_id_r <- cv_folds$folds_ids
@@ -65,4 +57,4 @@ df_low_vif <- st_drop_geometry(df_low_vif)
 # Save output
 write.csv(df_full, "datasets/5_split/df_full.csv", row.names = FALSE)
 write.csv(df_fe, "datasets/5_split/df_fe.csv", row.names = FALSE)
-write.csv(df_fe, "datasets/5_split/df_low_vif.csv", row.names = FALSE)
+write.csv(df_low_vif, "datasets/5_split/df_low_vif.csv", row.names = FALSE)
