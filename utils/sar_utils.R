@@ -169,7 +169,7 @@ get_optimal_hps <- function(hp_combinations, cv_results) {
     mae <- avg_scores$mae
     mse <- avg_scores$mse
     r2 <- avg_scores$r2
-    hp_combination_scores <- c(hp_combination_scores, mse)
+    hp_combination_scores <- c(hp_combination_scores, mae)
   }
 
   optimal_combination <- which.min(hp_combination_scores)

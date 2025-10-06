@@ -79,7 +79,7 @@ def get_optimal_hyperparameters(hp_combinations, cv_results):
     for i in range(len(hp_combinations)):
         current_hp_combination_results = [result for result in cv_results if result["hp_combination"] == i]
         mae, mse, r2 = get_avg_scores(current_hp_combination_results)
-        hp_combination_scores.append(mse)
+        hp_combination_scores.append(mae)
     optimal_combination = np.argmin(hp_combination_scores)
     optimal_hps = hp_combinations[optimal_combination]
     return optimal_hps
