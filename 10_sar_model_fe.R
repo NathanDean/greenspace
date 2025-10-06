@@ -7,6 +7,7 @@ library(spdep)
 library(sf)
 library(sfdep)
 library(Metrics)
+library(jsonlite)
 
 # Load data
 df <- st_read("datasets/5_split/df_fe.gpkg")
@@ -17,7 +18,7 @@ df <- df[, !names(df) %in% drop_cols]
 outer_fold_ids <- df$outer_loop_fold_id_r
 outer_splits <- sort(unique(outer_fold_ids))
 inner_fold_ids <- df[, grepl("inner_loop", names(df)), drop = FALSE]
-inner_splits <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+inner_splits <- c(1, 2, 3, 4, 5)
 
 # Drop unneeded cols
 drop_cols <- names(df)[grepl("fold_id", names(df))]
@@ -151,12 +152,11 @@ for (current_outer_split in outer_splits) {
   rownames(current_inner_fold_ids) <- NULL
 
   # Loop to test 10 hyperparameter combinations
-  for (i in 1:10) {
+  for (i in 1:8) {
 
     # Get random hyperparameters
     hps <- list()
-    # weighting_method <- sample(c("distance", "knn", "queen", "rook"), 1)
-    weighting_method <- "queen"
+    weighting_method <- sample(c("distance", "knn", "queen", "rook"), 1)
     hps$weighting_method <- weighting_method
     if (weighting_method == "distance") {
       max_distance <- sample(1000:2000, 1)
@@ -276,3 +276,5 @@ for (current_outer_split in outer_splits) {
   gc()
 
 }
+
+write_json(outer_cv_results, "outputs/model_results/sar_fe.json", auto_unbox = TRUE, pretty = TRUE)
