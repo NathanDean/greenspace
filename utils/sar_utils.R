@@ -99,34 +99,6 @@ create_spatial_weights <- function(df, hps) {
 
 }
 
-# Function - Build model
-build_model <- function(df, hps) {
-
-  # Create spatial weight matrix for train_df
-  print("Creating spatial weight matrix for train_df...")
-  w <- create_spatial_weights(df, hps)
-
-  df_no_geom <- st_drop_geometry(df)
-  rownames(df_no_geom) <- NULL
-
-  # Fit SAR model using spatial weights
-  print("Fitting model...")
-  system.time(
-    sar_model <- lagsarlm(
-      very_good_health ~ .,   # Predict very_good_health as a function of all other features apart from coords
-      data = df_no_geom,
-      listw = w,    # Spatial weights to calculate lagged dependent variable
-      method = "LU",    # Use LU decomposition to calculate lagged dependent variable
-      quiet = TRUE,
-      zero.policy = TRUE
-    )
-  )
-
-  # Return SAR model
-  sar_model
-  
-}
-
 # Function - Get evaluation metrics for set of predictions
 get_evaluation_metrics <- function(labels, predictions) {
 

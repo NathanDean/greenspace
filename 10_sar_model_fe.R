@@ -24,6 +24,34 @@ inner_fold_ids <- prepared_data$inner_fold_ids
 inner_splits <- prepared_data$inner_splits
 df <- prepared_data$df
 
+# Function - Build model
+build_model <- function(df, hps) {
+
+  # Create spatial weight matrix for train_df
+  print("Creating spatial weight matrix for train_df...")
+  w <- create_spatial_weights(df, hps)
+
+  df_no_geom <- st_drop_geometry(df)
+  rownames(df_no_geom) <- NULL
+
+  # Fit SAR model using spatial weights
+  print("Fitting model...")
+  system.time(
+    sar_model <- lagsarlm(
+      very_good_health ~ .,   # Predict very_good_health as a function of all other features apart from coords
+      data = df_no_geom,
+      listw = w,    # Spatial weights to calculate lagged dependent variable
+      method = "LU",    # Use LU decomposition to calculate lagged dependent variable
+      quiet = TRUE,
+      zero.policy = TRUE
+    )
+  )
+
+  # Return SAR model
+  sar_model
+  
+}
+
 # Evaluate model
 
 ## Initialise results list
