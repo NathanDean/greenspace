@@ -1,3 +1,4 @@
+# Set options and random seed
 options(warn = 1)
 set.seed(42)
 
@@ -8,132 +9,27 @@ library(sf)
 library(sfdep)
 library(Metrics)
 library(jsonlite)
+source("utils/sar_utils.R")
 
-# Load data
+# Prepare data
+
+## Load data
 df <- st_read("datasets/5_split/df_fe.gpkg")
-drop_cols <- names(df)[grepl("python", names(df))]
-df <- df[, !names(df) %in% drop_cols]
 
-# Extract fold ids
-outer_fold_ids <- df$outer_loop_fold_id_r
-outer_splits <- sort(unique(outer_fold_ids))
-inner_fold_ids <- df[, grepl("inner_loop", names(df)), drop = FALSE]
-inner_splits <- c(1, 2, 3, 4, 5)
+## Clean data and separate fold ids
+prepared_data <- prepare_data(df)
+outer_fold_ids <- prepared_data$outer_fold_ids
+outer_splits <- prepared_data$outer_splits
+inner_fold_ids <- prepared_data$inner_fold_ids
+inner_splits <- prepared_data$inner_splits
+df <- prepared_data$df
 
-# Drop unneeded cols
-drop_cols <- names(df)[grepl("fold_id", names(df))]
-df <- df[, !names(df) %in% drop_cols]
+# Evaluate model
 
-# Function - Create spatial weight matrix
-create_spatial_weights <- function(df, hps) {
-
-  weighting_method <- hps$weighting_method
-  coords <- st_centroid(st_geometry(df))
-  w <- NULL
-
-  if (weighting_method == "distance") {
-    print(weighting_method)
-    print(hps$max_distance)
-    dnn <- dnearneigh(coords, d1 = 200, d2 = hps$max_distance)
-    w <- nb2listw(dnn, zero.policy = TRUE)
-  } else if (weighting_method == "knn") {
-    print(weighting_method)
-    print(hps$k)
-    knn <- knearneigh(coords, k = hps$k)
-    w <- nb2listw(knn2nb(knn), zero.policy = TRUE)
-  } else {
-    print(weighting_method)
-    print(hps$is_queen)
-    nb <- st_contiguity(df, hps$is_queen)
-    w <- nb2listw(nb, zero.policy = TRUE)
-  }
-
-  # Return weights
-  w
-
-}
-
-# Function - Build model
-build_model <- function(df, hps) {
-
-  # Create spatial weight matrix for train_df
-  print("Creating spatial weight matrix for train_df...")
-  w <- create_spatial_weights(df, hps)
-
-  df_no_geom <- st_drop_geometry(df)
-  rownames(df_no_geom) <- NULL
-
-  # Fit SAR model using spatial weights
-  print("Fitting model...")
-  system.time(
-    sar_model <- lagsarlm(
-      very_good_health ~ .,   # Predict very_good_health as a function of all other features apart from coords
-      data = df_no_geom,
-      listw = w,    # Spatial weights to calculate lagged dependent variable
-      method = "LU",    # Use LU decomposition to calculate lagged dependent variable
-      quiet = TRUE,
-      zero.policy = TRUE
-    )
-  )
-
-  # Return SAR model
-  sar_model
-  
-}
-
-# Function - Get evaluation metrics for set of predictions
-get_evaluation_metrics <- function(labels, predictions) {
-
-  mae <- mae(labels, predictions)
-  mse <- mse(labels, predictions)
-  sum_of_squares_residual <- sum((labels - predictions) ^ 2)
-  sum_of_squares_total <- sum((labels - mean(labels)) ^ 2)
-  r2 <- 1 - (sum_of_squares_residual / sum_of_squares_total)
-  list(mae = mae, mse = mse, r2 = r2)
-
-}
-
-# Function - Average prediction scores for set of cross-validation results
-get_avg_scores <- function(cv_results) {
-  mae_scores <- c()
-  mse_scores <- c()
-  r2_scores <- c()
-
-  for (result in cv_results) {
-    mae_scores <- c(mae_scores, result$mae)
-    mse_scores <- c(mse_scores, result$mse)
-    r2_scores <- c(r2_scores, result$r2)
-  }
-
-  mae <- mean(mae_scores)
-  mse <- mean(mse_scores)
-  r2 <- mean(r2_scores)
-
-  avgs <- list(mae = mae, mse = mse, r2 = r2)
-  avgs
-}
-
-# Function - Find hyperparameter combination that produced best results from a set of cross-validation results
-get_optimal_hps <- function(hp_combinations, cv_results) {
-  hp_combination_scores <- c()
-
-  for (hp_combination in seq_along(hp_combinations)) {
-    current_hp_combination_results <- cv_results[sapply(cv_results, function(result) result$hp_combination == hp_combination)]
-    avg_scores <- get_avg_scores(current_hp_combination_results)
-    mae <- avg_scores$mae
-    mse <- avg_scores$mse
-    r2 <- avg_scores$r2
-    hp_combination_scores <- c(hp_combination_scores, mse)
-  }
-
-  optimal_combination <- which.min(hp_combination_scores)
-  optimal_hps <- hp_combinations[[optimal_combination]]
-  optimal_hps
-
-}
-
-# Nested cross-validation loop
+## Initialise results list
 outer_cv_results <- vector(mode = "list", length = 0)
+
+## Evaluate using nested cross-validation loop
 print(paste("outer_cv_results initialized:", exists("outer_cv_results")))
 
 for (current_outer_split in outer_splits) {
@@ -142,33 +38,16 @@ for (current_outer_split in outer_splits) {
   inner_cv_results <- vector(mode = "list", length = 0)
 
   # Separate data into training and validation sets
-  is_in_validation_set <- outer_fold_ids == current_outer_split
-  is_in_training_set <- !is_in_validation_set
-  outer_train_df <- df[is_in_training_set, ]
-  outer_validation_df <- df[is_in_validation_set, ]
-  current_inner_fold_ids <- inner_fold_ids[is_in_training_set, , drop = FALSE]    # Removes rows not in current training set
-  rownames(outer_train_df) <- NULL
-  rownames(outer_validation_df) <- NULL   # Reset row numbers so they align with spatial weight matrix for predictions
-  rownames(current_inner_fold_ids) <- NULL
+  outer_split_data <- split_data(df, current_outer_split, outer_fold_ids, is_outer = TRUE, inner_fold_ids = inner_fold_ids)
+  outer_train_df <- outer_split_data$train_df
+  outer_val_df <- outer_split_data$val_df
+  current_inner_fold_ids <- outer_split_data$current_inner_fold_ids
 
   # Loop to test 10 hyperparameter combinations
   for (i in 1:8) {
 
     # Get random hyperparameters
-    hps <- list()
-    weighting_method <- sample(c("distance", "knn", "queen", "rook"), 1)
-    hps$weighting_method <- weighting_method
-    if (weighting_method == "distance") {
-      max_distance <- sample(1000:2000, 1)
-      hps$max_distance <- max_distance
-
-    } else if (weighting_method == "knn") {
-      k <- sample(2:30, 1)
-      hps$k <- k
-    } else {
-      is_queen <- sample(c(TRUE, FALSE), 1)
-      hps$is_queen <- is_queen
-    }
+    hps <- get_random_hyperparameters()
     hp_combinations <- c(hp_combinations, list(hps))
 
     # Inner cross-validation to evaluate hyperparameter combinations
@@ -177,35 +56,32 @@ for (current_outer_split in outer_splits) {
       print(paste("--- Outer split ", current_outer_split, ": Training model ", i, " on inner split ", current_inner_split, "---"))
 
       # Separate data into training and validation sets
-      is_in_validation_set <- current_inner_fold_ids[[paste0("inner_loop_", current_outer_split, "_fold_id_r")]] == current_inner_split
-      is_in_training_set <- !is_in_validation_set
-      inner_train_df <- outer_train_df[is_in_training_set, ]
-      inner_validation_df <- outer_train_df[is_in_validation_set, ]
-      rownames(inner_train_df) <- NULL
-      rownames(inner_validation_df) <- NULL   # Reset row numbers so they align with spatial weight matrix for predictions
+      inner_split_data <- split_data(df, current_inner_split, current_inner_fold_ids[[paste0("inner_loop_", current_outer_split, "_fold_id_r")]])
+      inner_train_df <- inner_split_data$train_df
+      inner_val_df <- inner_split_data$val_df
 
       # Build model using inner_train_df
       print("Building model...")
       model <- build_model(inner_train_df, hps)
       
-      # Create spatial weight matrix for inner_validation_df
+      # Create spatial weight matrix for inner_valn_df
       print("Creating spatial weight matrix...")
-      inner_validation_w <- create_spatial_weights(inner_validation_df, hps)
+      inner_val_w <- create_spatial_weights(inner_val_df, hps)
 
-      # Calculate predictions on inner_validation_df
+      # Calculate predictions on inner_val_df
       print("Calculating predictions...")
-      inner_validation_df_no_geom <- st_drop_geometry(inner_validation_df)
+      inner_val_df_no_geom <- st_drop_geometry(inner_val_df)
 
       predictions <- predict(
         model,
-        newdata = inner_validation_df_no_geom,
-        listw = inner_validation_w,
+        newdata = inner_val_df_no_geom,
+        listw = inner_val_w,
         zero.policy = TRUE
       )  
 
       # Calculate accuracy metrics
       print("Evaluating predictions...")
-      labels <- inner_validation_df$very_good_health
+      labels <- inner_val_df$very_good_health
       metrics <- get_evaluation_metrics(labels, predictions)
       mae <- metrics$mae
       mse <- metrics$mse
@@ -223,7 +99,7 @@ for (current_outer_split in outer_splits) {
       inner_cv_results <- c(inner_cv_results, list(current_split_results))
 
       # Remove large variables to avoid memory issues
-      rm(model, inner_validation_w, predictions)
+      rm(model, inner_val_w, predictions)
       gc()
 
     }
@@ -240,21 +116,21 @@ for (current_outer_split in outer_splits) {
 
   # Create spatial weight matrix for validation_df
   print("Creating spatial weight matrix...")
-  outer_validation_w <- create_spatial_weights(outer_validation_df, optimal_hps)
+  outer_val_w <- create_spatial_weights(outer_val_df, optimal_hps)
 
   # Calculate predictions on validation_df
   print("Calculating predictions...")
-  outer_validation_df_no_geom <- st_drop_geometry(outer_validation_df)
+  outer_val_df_no_geom <- st_drop_geometry(outer_val_df)
   predictions <- predict(
     model,
-    newdata = outer_validation_df_no_geom,
-    listw = outer_validation_w,
+    newdata = outer_val_df_no_geom,
+    listw = outer_val_w,
     zero.policy = TRUE
   )  
 
   # Calculate accuracy metrics
   print("Evaluating predictions...")
-  labels <- outer_validation_df$very_good_health
+  labels <- outer_val_df$very_good_health
   metrics <- get_evaluation_metrics(labels, predictions)
   mae <- metrics$mae
   mse <- metrics$mse
@@ -272,9 +148,10 @@ for (current_outer_split in outer_splits) {
   outer_cv_results <- c(outer_cv_results, list(current_split_results))
 
   # Remove large variables to avoid memory issues
-  rm(model, outer_validation_w, predictions)
+  rm(model, outer_val_w, predictions)
   gc()
 
 }
 
+# Save output
 write_json(outer_cv_results, "outputs/model_results/sar_fe.json", auto_unbox = TRUE, pretty = TRUE)
