@@ -26,7 +26,7 @@ block_size <- autocorrelation_range * 2
 # Create outer cross-validation folds using spatial blocking
 outer_cv_folds <- cv_spatial(
   x = df_full,
-  k = 10,
+  k = 5,
   size = block_size,
   iteration = 100
 )
@@ -49,7 +49,7 @@ for (fold in unique(outer_cv_folds$folds_ids)) {
 
   inner_cv_folds <- cv_spatial(
     x = training_set,
-    k = 10,
+    k = 5,
     size = block_size,
     iteration = 100
   )
