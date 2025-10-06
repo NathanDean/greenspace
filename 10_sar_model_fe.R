@@ -1,5 +1,5 @@
 # Set options and random seed
-options(warn = 1)
+# options(warn = 1)
 set.seed(42)
 
 # Imports

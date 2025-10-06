@@ -3,12 +3,13 @@ import libpysal.weights as weights
 import pysal.explore as esda
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
+
 def separate_features(df):
     # Drop R columns
-    df = df.drop(columns = [col for col in df.columns if "fold_id_r" in col])
-    
+    df = df.drop(columns=[col for col in df.columns if "fold_id_r" in col])
+
     # Dependent variables
-    labels = df.pop('very_good_health')
+    labels = df.pop("very_good_health")
 
     # Outer CV folds
     outer_fold_ids = df["outer_loop_fold_id_python"]
@@ -19,15 +20,17 @@ def separate_features(df):
     inner_splits = np.sort(inner_fold_ids.stack().unique().astype(int))
 
     # Independent variables
-    features = df.drop(columns = [col for col in df.columns if "fold_id" in col])
+    features = df.drop(columns=[col for col in df.columns if "fold_id" in col])
     features["x_coord"] = features["geometry"].centroid.x
     features["y_coord"] = features["geometry"].centroid.y
-    features = features.drop(columns = ["geometry"])
+    features = features.drop(columns=["geometry"])
 
     return labels, outer_fold_ids, outer_splits, inner_fold_ids, inner_splits, features
 
 
-def split_data(current_split, fold_ids, features, labels, is_outer = False, inner_fold_ids = None):
+def split_data(
+    current_split, fold_ids, features, labels, is_outer=False, inner_fold_ids=None
+):
     is_in_validation_set = fold_ids == current_split
     is_in_training_set = ~is_in_validation_set
     train_features = features.loc[is_in_training_set]
@@ -37,26 +40,39 @@ def split_data(current_split, fold_ids, features, labels, is_outer = False, inne
     current_inner_fold_ids = None
     if is_outer:
         current_inner_fold_ids = inner_fold_ids.loc[is_in_training_set]
-    return train_features, train_labels, val_features, val_labels, current_inner_fold_ids
+    return (
+        train_features,
+        train_labels,
+        val_features,
+        val_labels,
+        current_inner_fold_ids,
+    )
+
 
 def get_ann_random_hyperparameters(features):
     no_of_layers = np.random.randint(1, 5)
     no_of_nodes = []
     for i in range(0, no_of_layers):
-        no_of_nodes.append(np.random.randint((len(features.columns) / 2), (len(features.columns) * 2)))
+        no_of_nodes.append(
+            np.random.randint((len(features.columns) / 2), (len(features.columns) * 2))
+        )
     learning_rate = np.random.uniform(0.0001, 0.1)
-    return no_of_layers, no_of_nodes, learning_rate
+    batch_size = np.random.randint(10, 64)
+    return no_of_layers, no_of_nodes, learning_rate, batch_size
+
 
 def get_gwr_random_hyperparameters():
     kernel = np.random.choice(["bisquare", "Gaussian", "exponential"])
     criterion = np.random.choice(["AICc", "AIC", "BIC", "CV"])
-    return kernel, criterion    
+    return kernel, criterion
 
-def get_evaluation_metrics(val_features, val_labels, predictions):
+
+def get_evaluation_metrics(val_labels, predictions):
     mae = mean_absolute_error(val_labels, predictions)
     mse = mean_squared_error(val_labels, predictions)
     r2 = r2_score(val_labels, predictions)
     return mae, mse, r2
+
 
 def get_avg_scores(cv_results):
     mae_scores = []
@@ -74,10 +90,13 @@ def get_avg_scores(cv_results):
 
     return avg_mae, avg_mse, avg_r2
 
+
 def get_optimal_hyperparameters(hp_combinations, cv_results):
     hp_combination_scores = []
     for i in range(len(hp_combinations)):
-        current_hp_combination_results = [result for result in cv_results if result["hp_combination"] == i]
+        current_hp_combination_results = [
+            result for result in cv_results if result["hp_combination"] == i
+        ]
         mae, mse, r2 = get_avg_scores(current_hp_combination_results)
         hp_combination_scores.append(mae)
     optimal_combination = np.argmin(hp_combination_scores)
