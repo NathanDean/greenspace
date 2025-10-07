@@ -1,6 +1,4 @@
 import numpy as np
-import libpysal.weights as weights
-import pysal.explore as esda
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 
@@ -56,9 +54,10 @@ def get_ann_random_hyperparameters(features):
         no_of_nodes.append(
             np.random.randint((len(features.columns) / 2), (len(features.columns) * 2))
         )
-    learning_rate = np.random.uniform(0.0001, 0.1)
     batch_size = np.random.randint(10, 64)
-    return no_of_layers, no_of_nodes, learning_rate, batch_size
+    learning_rate = np.random.uniform(0.0001, 0.1)
+    loss_function = np.random.choice(["mae", "mse"])
+    return no_of_layers, no_of_nodes, batch_size, learning_rate, loss_function
 
 
 def get_gwr_random_hyperparameters():
