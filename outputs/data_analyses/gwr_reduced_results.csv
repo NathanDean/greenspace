@@ -1,0 +1,6 @@
+outer_split,kernel,criterion,mae,mse,r2
+0,bisquare,AICc,0.037145,0.002275,-0.214966
+1,bisquare,AICc,0.051282,0.004464,-0.438794
+2,bisquare,BIC,0.047725,0.003894,-0.330233
+3,bisquare,BIC,0.057098,0.005164,-0.087753
+4,bisquare,CV,0.03869,0.00251,-0.58459
