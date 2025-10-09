@@ -46,7 +46,7 @@ GWR,MAE,0.037145,0.057098,0.046388
 GWR,MSE,0.002275,0.005164,0.003661
 GWR,R2,-0.087753,-0.58459,-0.331267
 
-MAE Summary
+MAE summary
 Model,Dataset,Best score,Worst score,Mean score
 FNN,Full,0.022492,0.042764,0.031006
 SAR,FE,0.0277,0.0453,0.03414
@@ -55,7 +55,7 @@ SAR,Reduced,0.0308,0.0486,0.03672
 GWR,Reduced,0.037145,0.057098,0.046388
 FNN,FE,0.025643,258.53549,51.733573
 
-MSE Summary
+MSE summary
 Model,Dataset,Best score,Worst score,Mean score
 FNN,Full,0.000822,0.00258,0.001606
 FNN,Reduced,0.001248,0.002707,0.001978
@@ -64,7 +64,7 @@ SAR,Reduced,0.0015,0.0039,0.00228
 GWR,Reduced,0.002275,0.005164,0.003661
 FNN,FE,0.001384,34282500.964439,6856500.194506
 
-R2 Summary
+R2 summary
 Model,Dataset,Best score,Worst score,Mean score
 FNN,Full,0.680459,-0.628751,0.3274
 SAR,FE,0.4157,0.1173,0.2894
@@ -73,7 +73,7 @@ SAR,Reduced,0.4,-0.1149,0.16852
 GWR,Reduced,-0.087753,-0.58459,-0.331267
 FNN,FE,0.553897,-21645689183.54926,-4329137836.448632
 
-ANN Full Results
+ANN full results
 Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function,MAE,MSE,R2
 0,3,"[372, 208, 173]",30,0.015686,MAE,0.022492,0.000822,0.56087
 1,4,"[142, 258, 116, 402]",10,0.001662,MAE,0.024638,0.000991,0.680459
@@ -81,7 +81,7 @@ Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function
 3,4,"[261, 197, 334, 281]",58,0.006583,MSE,0.035033,0.002044,0.569407
 4,4,"[245, 198, 302, 225]",15,0.069612,MAE,0.042764,0.00258,-0.628751
 
-ANN FE Results
+ANN FE results
 Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function,MAE,MSE,R2
 0,2,"[26, 30]",20,0.045979,MAE,0.02989,0.001395,0.25492
 1,2,"[23, 22]",17,0.057087,MSE,0.025643,0.001384,0.553897
@@ -89,7 +89,7 @@ Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function
 3,2,"[15, 16]",46,0.069274,MSE,0.034452,0.002379,0.498895
 4,4,"[14, 27, 16, 8]",49,0.038735,MSE,258.53549,34282500.964439,-21645689183.54926
 
-ANN Reduced Results
+ANN reduced results
 Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function,MAE,MSE,R2
 0,1,[5],34,0.029194,MAE,0.028205,0.001248,0.333451
 1,1,[3],35,0.04503,MSE,0.030152,0.001535,0.505411
@@ -97,7 +97,7 @@ Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function
 3,3,"[2, 7, 6]",42,0.012075,MSE,0.041472,0.002707,0.42975
 4,1,[5],35,0.098566,MSE,0.042735,0.002527,-0.595766
 
-SAR FE Results
+SAR FE results
 Outer CV split,Weighting method,Weighting param,MAE,MSE,R2
 1,knn,5,0.0277,0.0012,0.3713
 2,distance,1516,0.032,0.0018,0.4157
@@ -105,7 +105,7 @@ Outer CV split,Weighting method,Weighting param,MAE,MSE,R2
 4,knn,7,0.0453,0.0036,0.2459
 5,knn,3,0.0299,0.0014,0.1173
 
-SAR Reduced Results
+SAR reduced results
 Outer CV split,Weighting method,Weighting param,MAE,MSE,R2
 1,knn,5,0.0308,0.0015,0.1757
 2,distance,1516,0.0324,0.0019,0.4
@@ -113,10 +113,25 @@ Outer CV split,Weighting method,Weighting param,MAE,MSE,R2
 4,knn,7,0.0486,0.0039,0.1719
 5,knn,3,0.034,0.0018,-0.1149
 
-GWR Reduced Results
+GWR reduced results
 Outer CV split,Kernel,Criterion,MAE,MSE,R2
 0,bisquare,AICc,0.037145,0.002275,-0.214966
 1,bisquare,AICc,0.051282,0.004464,-0.438794
 2,bisquare,BIC,0.047725,0.003894,-0.330233
 3,bisquare,BIC,0.057098,0.005164,-0.087753
 4,bisquare,CV,0.03869,0.00251,-0.58459
+
+Hypothesis testing results
+Model 1,Model 2,Dataset,Metric,Statistic,P-value
+ANN,SAR,FE,MAE,6.0,0.8125
+ANN,SAR,Reduced,MAE,5.0,0.625
+ANN,GWR,Reduced,MAE,1.0,0.125
+SAR,GWR,Reduced,MAE,0.0,0.0625
+ANN,SAR,FE,MSE,6.0,0.8125
+ANN,SAR,Reduced,MSE,4.0,0.4375
+ANN,GWR,Reduced,MSE,1.0,0.125
+SAR,GWR,Reduced,MSE,0.0,0.0625
+ANN,SAR,FE,R2,5.0,0.625
+ANN,SAR,Reduced,R2,5.0,0.625
+ANN,GWR,Reduced,R2,1.0,0.125
+SAR,GWR,Reduced,R2,0.0,0.0625
