@@ -1,6 +1,0 @@
-outer_split,weighting_method,weighting_param,mae,mse,r2
-1,knn,5,0.0308,0.0015,0.1757
-2,distance,1516,0.0324,0.0019,0.4
-3,distance,1297,0.0378,0.0023,0.2099
-4,knn,7,0.0486,0.0039,0.1719
-5,knn,3,0.034,0.0018,-0.1149
