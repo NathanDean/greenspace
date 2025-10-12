@@ -122,16 +122,25 @@ Outer CV split,Kernel,Criterion,MAE,MSE,R2
 4,bisquare,CV,0.03869,0.00251,-0.58459
 
 Hypothesis testing results
-Model 1,Model 2,Dataset,Metric,Statistic,P-value
-ANN,SAR,FE,MAE,6.0,0.8125
-ANN,SAR,Reduced,MAE,5.0,0.625
-ANN,GWR,Reduced,MAE,1.0,0.125
-SAR,GWR,Reduced,MAE,0.0,0.0625
-ANN,SAR,FE,MSE,6.0,0.8125
-ANN,SAR,Reduced,MSE,4.0,0.4375
-ANN,GWR,Reduced,MSE,1.0,0.125
-SAR,GWR,Reduced,MSE,0.0,0.0625
-ANN,SAR,FE,R2,5.0,0.625
-ANN,SAR,Reduced,R2,5.0,0.625
-ANN,GWR,Reduced,R2,1.0,0.125
-SAR,GWR,Reduced,R2,0.0,0.0625
+Metric,Model 1,Model 2,Dataset,Statistic,P-value
+MAE,ANN,SAR,FE,9.0,0.6875
+MAE,ANN,SAR,Reduced,5.0,0.3125
+MAE,ANN,GWR,Reduced,1.0,0.0625
+MSE,ANN,SAR,FE,9.0,0.6875
+MSE,ANN,SAR,Reduced,4.0,0.21875
+MSE,ANN,GWR,Reduced,1.0,0.0625
+R2,ANN,SAR,FE,5.0,0.78125
+R2,ANN,SAR,Reduced,10.0,0.3125
+R2,ANN,GWR,Reduced,14.0,0.0625
+
+FNN hypothesis testing results
+Metric,Model 1,Model 1 dataset,Model 2,Model 2 dataset,Statistic,P-value
+MAE,ANN,Full,SAR,FE,5.0,0.3125
+MAE,ANN,Full,SAR,Reduced,4.0,0.21875
+MAE,ANN,Full,GWR,Reduced,1.0,0.0625
+MSE,ANN,Full,SAR,FE,4.0,0.21875
+MSE,ANN,Full,SAR,Reduced,3.0,0.15625
+MSE,ANN,Full,GWR,Reduced,1.0,0.0625
+R2,ANN,Full,SAR,FE,10.0,0.3125
+R2,ANN,Full,SAR,Reduced,10.0,0.3125
+R2,ANN,Full,GWR,Reduced,14.0,0.0625
