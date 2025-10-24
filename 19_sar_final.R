@@ -7,10 +7,18 @@ library(spdep)
 library(sf)
 library(sfdep)
 library(jsonlite)
+library(dotenv)
 source("utils/sar_utils.R")
 
+load_dot_env()
+username <- Sys.getenv("DB_USERNAME")
+password <- Sys.getenv("DB_PASSWORD")
+
+db_connection_string <- sprintf("PG:dbname=greenspace host=localhost user=%s password=%s port=5432", username, password)
+
 # Prepare data
-df <- st_read("datasets/4_fe/df_fe.gpkg")
+df <- st_read(db_connection_string, query = "SELECT * FROM engineered_dataset")
+
 coords <- st_centroid(st_geometry(df))
 
 

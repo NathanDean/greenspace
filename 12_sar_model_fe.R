@@ -9,12 +9,19 @@ library(sf)
 library(sfdep)
 library(Metrics)
 library(jsonlite)
+library(dotenv)
 source("utils/sar_utils.R")
+
+load_dot_env()
+username <- Sys.getenv("DB_USERNAME")
+password <- Sys.getenv("DB_PASSWORD")
+
+db_connection_string <- sprintf("PG:dbname=greenspace host=localhost user=%s password=%s port=5432", username, password)
 
 # Prepare data
 
 ## Load data
-df <- st_read("datasets/5_split/df_fe.gpkg")
+df <- st_read(db_connection_string, query = "SELECT * FROM engineered_dataset")
 
 ## Clean data and separate fold ids
 prepared_data <- prepare_data(df)

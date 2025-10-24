@@ -9,12 +9,19 @@ library(sf)
 library(sfdep)
 library(Metrics)
 library(jsonlite)
+library(dotenv)
 source("utils/sar_utils.R")
+
+load_dot_env()
+username <- Sys.getenv("DB_USERNAME")
+password <- Sys.getenv("DB_PASSWORD")
+
+db_connection_string <- sprintf("PG:dbname=greenspace host=localhost user=%s password=%s port=5432", username, password)
 
 # Prepare data
 
 ## Load data
-df <- st_read("datasets/5_split/df_full.gpkg")
+df <- st_read(db_connection_string, query = "SELECT * FROM engineered_dataset")
 
 ## Clean data and separate fold ids
 prepared_data <- prepare_data(df)
@@ -38,7 +45,7 @@ build_model <- function(df, hps) {
   print("Fitting model...")
   system.time(
     sar_model <- lagsarlm(
-      very_good_health ~ .,   # Predict very_good_health as a function of all other features apart from coords
+      very_good_health ~ greenspace_proportion + imd + f_m_ratio + mean_age,
       data = df_no_geom,
       listw = w,    # Spatial weights to calculate lagged dependent variable
       method = "LU",    # Use LU decomposition to calculate lagged dependent variable
@@ -71,7 +78,7 @@ for (current_outer_split in outer_splits) {
   outer_val_df <- outer_split_data$val_df
   current_inner_fold_ids <- outer_split_data$current_inner_fold_ids
 
-  # Loop to test 10 hyperparameter combinations
+  # Loop to test 8 hyperparameter combinations
   for (i in 1:8) {
 
     # Get random hyperparameters
@@ -182,4 +189,4 @@ for (current_outer_split in outer_splits) {
 }
 
 # Save output
-write_json(outer_cv_results, "outputs/model_results/sar_fe.json", auto_unbox = TRUE, pretty = TRUE)
+write_json(outer_cv_results, "outputs/model_results/sar_fe_reduced.json", auto_unbox = TRUE, pretty = TRUE)

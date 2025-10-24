@@ -1,17 +1,22 @@
 # Imports
-library(blockCV)
 library(sf)
+library(blockCV)
+library(dotenv)
+
+load_dot_env()
+username <- Sys.getenv("DB_USERNAME")
+password <- Sys.getenv("DB_PASSWORD")
+
+db_connection_string <- sprintf("PG:dbname=greenspace host=localhost user=%s password=%s port=5432", username, password)
 
 # Set random seed
 set.seed(42)
 
 # Load data and set geometries
-df_full <- st_read("datasets/4_fe/df_full.gpkg")
+df_full <- st_read(db_connection_string, query = "SELECT * FROM full_dataset")
 st_geometry(df_full) <- "geometry"
-df_fe <- st_read("datasets/4_fe/df_fe.gpkg")
+df_fe <- st_read(db_connection_string, query = "SELECT * FROM engineered_dataset")
 st_geometry(df_fe) <- "geometry"
-df_low_vif <- st_read("datasets/4_fe/df_low_vif.gpkg")
-st_geometry(df_low_vif) <- "geometry"
 
 # Measure distance of spatial autocorrelation for very_good_health
 autocorrelation_info <- cv_spatial_autocor(
@@ -34,10 +39,8 @@ outer_cv_folds <- cv_spatial(
 # Add outer fold allocations to dfs
 df_full$outer_loop_fold_id_r <- outer_cv_folds$folds_ids            # R indexes from 1
 df_fe$outer_loop_fold_id_r <- outer_cv_folds$folds_ids
-df_low_vif$outer_loop_fold_id_r <- outer_cv_folds$folds_ids
 df_full$outer_loop_fold_id_python <- outer_cv_folds$folds_ids - 1   # Python indexes from 0
 df_fe$outer_loop_fold_id_python <- outer_cv_folds$folds_ids - 1
-df_low_vif$outer_loop_fold_id_python <- outer_cv_folds$folds_ids - 1
 
 # Create inner cross-validation folds
 for (fold in unique(outer_cv_folds$folds_ids)) {
@@ -57,22 +60,17 @@ for (fold in unique(outer_cv_folds$folds_ids)) {
   # Set inner fold ids to NA
   df_full[[paste0("inner_loop_", fold, "_fold_id_r")]] <- NA
   df_fe[[paste0("inner_loop_", fold, "_fold_id_r")]] <- NA
-  df_low_vif[[paste0("inner_loop_", fold, "_fold_id_r")]] <- NA
   df_full[[paste0("inner_loop_", fold, "_fold_id_python")]] <- NA
   df_fe[[paste0("inner_loop_", fold, "_fold_id_python")]] <- NA
-  df_low_vif[[paste0("inner_loop_", fold, "_fold_id_python")]] <- NA
 
   # Add inner fold ids to training rows
   df_full[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_r")] <- inner_cv_folds$folds_ids            # R indexes from 1
   df_fe[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_r")] <- inner_cv_folds$folds_ids
-  df_low_vif[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_r")] <- inner_cv_folds$folds_ids
   df_full[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_python")] <- inner_cv_folds$folds_ids - 1   # Python indexes from 0
   df_fe[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_python")] <- inner_cv_folds$folds_ids - 1
-  df_low_vif[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_python")] <- inner_cv_folds$folds_ids - 1
 
 }
 
 # Save output
-st_write(df_full, "datasets/5_split/df_full.gpkg", driver = "GPKG", row.names = FALSE, append = FALSE)
-st_write(df_fe, "datasets/5_split/df_fe.gpkg", driver = "GPKG", row.names = FALSE, append = FALSE)
-st_write(df_low_vif, "datasets/5_split/df_low_vif.gpkg", driver = "GPKG", row.names = FALSE, append = FALSE)
+st_write(df_full, db_connection_string, "split_full_dataset", layer_options = "GEOMETRY_NAME=geometry", delete_layer = TRUE)
+st_write(df_fe, db_connection_string, "split_engineered_dataset", layer_options = "GEOMETRY_NAME=geometry", delete_layer = TRUE)
