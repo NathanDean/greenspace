@@ -5,9 +5,8 @@ library(sf)
 library(sfdep)
 library(Metrics)
 library(jsonlite)
-library(dotenv)
 library(here)
-source(here("utils", "sar_utils.R"))
+source(here("utils", "model_utils.R"))
 
 build_model <- function(df, hps) {
   # Create spatial weight matrix for train_df
