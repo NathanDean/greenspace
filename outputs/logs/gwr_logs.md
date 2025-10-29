@@ -1,8 +1,4 @@
-# With full dataset
-
-# With any ethnicity dummy variable - kernel = bisquare
-
-# With greenspace, imd, mean age, and gender ratio - fixed = random
+# With full or FE dataset
 
 LinAlgError: Matrix is singular.
 

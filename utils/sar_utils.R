@@ -27,8 +27,8 @@ prepare_data <- function(df) {
   )
 
   prepared_data
-
 }
+
 
 split_data <- function(df, current_split, fold_ids, is_outer = FALSE, inner_fold_ids = NULL) {
   is_in_validation_set <- fold_ids == current_split
@@ -37,11 +37,11 @@ split_data <- function(df, current_split, fold_ids, is_outer = FALSE, inner_fold
   val_df <- df[is_in_validation_set, ]
   current_inner_fold_ids <- NULL
   if (is_outer) {
-    current_inner_fold_ids <- inner_fold_ids[is_in_training_set, , drop = FALSE]    # Removes rows not in current training set
+    current_inner_fold_ids <- inner_fold_ids[is_in_training_set, , drop = FALSE] # Removes rows not in current training set
     rownames(current_inner_fold_ids) <- NULL
   }
   rownames(train_df) <- NULL
-  rownames(val_df) <- NULL   # Reset row numbers so they align with spatial weight matrix for predictions
+  rownames(val_df) <- NULL # Reset row numbers so they align with spatial weight matrix for predictions
   split_data <- list(
     train_df = train_df,
     val_df = val_df,
@@ -51,28 +51,8 @@ split_data <- function(df, current_split, fold_ids, is_outer = FALSE, inner_fold
   split_data
 }
 
-get_random_hyperparameters <- function() {
-  hps <- list()
-  weighting_method <- sample(c("distance", "knn", "queen", "rook"), 1)
-  hps$weighting_method <- weighting_method
-  if (weighting_method == "distance") {
-    max_distance <- sample(1000:2000, 1)
-    hps$max_distance <- max_distance
-
-  } else if (weighting_method == "knn") {
-    k <- sample(2:30, 1)
-    hps$k <- k
-  } else {
-    is_queen <- sample(c(TRUE, FALSE), 1)
-    hps$is_queen <- is_queen
-  }
-
-  hps
-  
-}
 
 create_spatial_weights <- function(df, hps) {
-
   weighting_method <- hps$weighting_method
   coords <- st_centroid(st_geometry(df))
   w <- NULL
@@ -96,19 +76,16 @@ create_spatial_weights <- function(df, hps) {
 
   # Return weights
   w
-
 }
 
 # Function - Get evaluation metrics for set of predictions
 get_evaluation_metrics <- function(labels, predictions) {
-
   mae <- mae(labels, predictions)
   mse <- mse(labels, predictions)
-  sum_of_squares_residual <- sum((labels - predictions) ^ 2)
-  sum_of_squares_total <- sum((labels - mean(labels)) ^ 2)
+  sum_of_squares_residual <- sum((labels - predictions)^2)
+  sum_of_squares_total <- sum((labels - mean(labels))^2)
   r2 <- 1 - (sum_of_squares_residual / sum_of_squares_total)
   list(mae = mae, mse = mse, r2 = r2)
-
 }
 
 # Function - Average prediction scores for set of cross-validation results
@@ -147,5 +124,4 @@ get_optimal_hps <- function(hp_combinations, cv_results) {
   optimal_combination <- which.min(hp_combination_scores)
   optimal_hps <- hp_combinations[[optimal_combination]]
   optimal_hps
-
 }

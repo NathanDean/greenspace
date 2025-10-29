@@ -47,25 +47,6 @@ def split_data(
     )
 
 
-def get_ann_random_hyperparameters(features):
-    no_of_layers = np.random.randint(1, 5)
-    no_of_nodes = []
-    for i in range(0, no_of_layers):
-        no_of_nodes.append(
-            np.random.randint((len(features.columns) / 2), (len(features.columns) * 2))
-        )
-    batch_size = np.random.randint(10, 64)
-    learning_rate = np.random.uniform(0.0001, 0.1)
-    loss_function = np.random.choice(["mae", "mse"])
-    return no_of_layers, no_of_nodes, batch_size, learning_rate, loss_function
-
-
-def get_gwr_random_hyperparameters():
-    kernel = np.random.choice(["bisquare", "Gaussian", "exponential"])
-    criterion = np.random.choice(["AICc", "AIC", "BIC", "CV"])
-    return kernel, criterion
-
-
 def get_evaluation_metrics(val_labels, predictions):
     mae = mean_absolute_error(val_labels, predictions)
     mse = mean_squared_error(val_labels, predictions)
