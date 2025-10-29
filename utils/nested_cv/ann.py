@@ -9,7 +9,12 @@ from utils.model_utils import (
 
 
 def build_model(
-    train_features, no_of_layers, no_of_nodes, learning_rate, loss_function
+    train_features,
+    no_of_layers,
+    no_of_nodes,
+    learning_rate,
+    loss_function,
+    regularised=False,
 ):
 
     layers = []
@@ -20,6 +25,8 @@ def build_model(
 
     for layer_no in range(no_of_layers):
         layers.append(keras.layers.Dense(no_of_nodes[layer_no], activation="relu"))
+        if regularised:
+            layers.append(keras.layers.Dropout(0.2))
 
     layers.append(keras.layers.Dense(1))  # Single output for regression value
 
@@ -52,7 +59,7 @@ def get_random_hyperparameters(features):
     return no_of_layers, no_of_nodes, batch_size, learning_rate, loss_function
 
 
-def evaluate_ann(df):
+def evaluate_ann(df, regularised=False):
 
     outer_cv_results = []
     (
@@ -131,6 +138,7 @@ def evaluate_ann(df):
                     no_of_nodes,
                     learning_rate,
                     loss_function,
+                    regularised,
                 )
                 early_stopper = build_early_stopper()
 
@@ -180,6 +188,7 @@ def evaluate_ann(df):
             opt_no_of_nodes,
             opt_learning_rate,
             opt_loss_function,
+            regularised,
         )
         early_stopper = build_early_stopper()
 
