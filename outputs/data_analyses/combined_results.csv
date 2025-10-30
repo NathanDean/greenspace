@@ -1,227 +1,347 @@
-Summary,,,,,,,,
+Summary
 Model,Dataset,Metric,Best score,Worst score,Mean score,Std dev,Best split,Worst split
 FNN,Full,MAE,0.022492,0.042764,0.031006,0.00819,0,4
 FNN,Full,MSE,0.000822,0.00258,0.001606,0.00073,0,4
 FNN,Full,R2,0.680459,-0.628751,0.3274,0.540425,1,4
 FNN,FE,MAE,0.025643,258.53549,51.733573,115.605786,1,4
-FNN,FE,MSE,0.001384,34282500.96,6856500.195,15331600.52,1,4
-FNN,FE,R2,0.553897,-21645689184,-4329137836,9680246487,1,4
+FNN,FE,MSE,0.001384,34282500.964439,6856500.194506,15331600.518133,1,4
+FNN,FE,R2,0.553897,-21645689183.54926,-4329137836.448632,9680246486.99564,1,4
 FNN,Reduced,MAE,0.028205,0.042735,0.035207,0.006586,0,4
 FNN,Reduced,MSE,0.001248,0.002707,0.001978,0.000627,0,3
 FNN,Reduced,R2,0.505411,-0.595766,0.206481,0.453421,1,4
-SAR,FE,MAE,0.0277,0.0453,0.03414,0.006916,0,3
-SAR,FE,MSE,0.0012,0.0036,0.00202,0.00095,0,3
-SAR,FE,R2,0.4157,0.1173,0.2894,0.116431,1,4
+Regularised FNN,Full,MAE,0.022371,0.034361,0.029067,0.005374,0,4
+Regularised FNN,Full,MSE,0.000812,0.002175,0.001485,0.000572,0,2
+Regularised FNN,Full,R2,0.675544,-0.133247,0.406147,0.346366,1,4
+Regularised FNN,FE,MAE,0.024191,0.039198,0.028639,0.006087,0,3
+Regularised FNN,FE,MSE,0.000931,0.002752,0.001459,0.000748,0,3
+Regularised FNN,FE,R2,0.663598,0.295601,0.479114,0.134301,1,4
+Regularised FNN,Reduced,MAE,0.024078,0.038555,0.029927,0.005606,4,3
+Regularised FNN,Reduced,MSE,0.000968,0.002572,0.001583,0.000646,4,3
+Regularised FNN,Reduced,R2,0.493851,0.394102,0.438631,0.041637,1,2
+SAR,FE,MAE,0.028,0.0452,0.0347,0.006672,0,3
+SAR,FE,MSE,0.0012,0.0036,0.00208,0.000944,0,3
+SAR,FE,R2,0.3713,0.1311,0.26526,0.088791,0,4
 SAR,Reduced,MAE,0.0308,0.0486,0.03672,0.007131,0,3
 SAR,Reduced,MSE,0.0015,0.0039,0.00228,0.00095,0,3
 SAR,Reduced,R2,0.4,-0.1149,0.16852,0.184177,1,4
 GWR,Reduced,MAE,0.037145,0.057098,0.046388,0.008443,0,3
 GWR,Reduced,MSE,0.002275,0.005164,0.003661,0.001245,0,3
 GWR,Reduced,R2,-0.087753,-0.58459,-0.331267,0.192718,3,4
-,,,,,,,,
-Experiment 1,,,,,,,,
-Model,Metric,Best score,Worst score,Mean score,Std dev,,,
-FNN,MAE,0.022492,0.042764,0.031006,0.00819,,,
-FNN,MSE,0.000822,0.00258,0.001606,0.00073,,,
-FNN,R2,0.680459,-0.628751,0.3274,0.540425,,,
-,,,,,,,,
-Experiment 2,,,,,,,,
-Model,Metric,Best score,Worst score,Mean score,Std dev,,,
-FNN,MAE,0.025643,258.53549,51.733573,115.605786,,,
-FNN,MSE,0.001384,34282500.96,6856500.195,15331600.52,,,
-FNN,R2,0.553897,-21645689184,-4329137836,9680246487,,,
-SAR,MAE,0.0277,0.0453,0.03414,0.006916,,,
-SAR,MSE,0.0012,0.0036,0.00202,0.00095,,,
-SAR,R2,0.4157,0.1173,0.2894,0.116431,,,
-,,,,,,,,
-Experiment 3,,,,,,,,
-Model,Metric,Best score,Worst score,Mean score,Std dev,,,
-FNN,MAE,0.028205,0.042735,0.035207,0.006586,,,
-FNN,MSE,0.001248,0.002707,0.001978,0.000627,,,
-FNN,R2,0.505411,-0.595766,0.206481,0.453421,,,
-SAR,MAE,0.0308,0.0486,0.03672,0.007131,,,
-SAR,MSE,0.0015,0.0039,0.00228,0.00095,,,
-SAR,R2,0.4,-0.1149,0.16852,0.184177,,,
-GWR,MAE,0.037145,0.057098,0.046388,0.008443,,,
-GWR,MSE,0.002275,0.005164,0.003661,0.001245,,,
-GWR,R2,-0.087753,-0.58459,-0.331267,0.192718,,,
-,,,,,,,,
-MAE summary,,,,,,,,
-Model,Dataset,Best score,Worst score,Mean score,Std dev,,,
-FNN,Full,0.022492,0.042764,0.031006,0.00819,,,
-SAR,FE,0.0277,0.0453,0.03414,0.006916,,,
-FNN,Reduced,0.028205,0.042735,0.035207,0.006586,,,
-SAR,Reduced,0.0308,0.0486,0.03672,0.007131,,,
-GWR,Reduced,0.037145,0.057098,0.046388,0.008443,,,
-FNN,FE,0.025643,258.53549,51.733573,115.605786,,,
-,,,,,,,,
-MSE summary,,,,,,,,
-Model,Dataset,Best score,Worst score,Mean score,Std dev,,,
-FNN,Full,0.000822,0.00258,0.001606,0.00073,,,
-FNN,Reduced,0.001248,0.002707,0.001978,0.000627,,,
-SAR,FE,0.0012,0.0036,0.00202,0.00095,,,
-SAR,Reduced,0.0015,0.0039,0.00228,0.00095,,,
-GWR,Reduced,0.002275,0.005164,0.003661,0.001245,,,
-FNN,FE,0.001384,34282500.96,6856500.195,15331600.52,,,
-,,,,,,,,
-R2 summary,,,,,,,,
-Model,Dataset,Best score,Worst score,Mean score,Std dev,,,
-FNN,Full,0.680459,-0.628751,0.3274,0.540425,,,
-SAR,FE,0.4157,0.1173,0.2894,0.116431,,,
-FNN,Reduced,0.505411,-0.595766,0.206481,0.453421,,,
-SAR,Reduced,0.4,-0.1149,0.16852,0.184177,,,
-GWR,Reduced,-0.087753,-0.58459,-0.331267,0.192718,,,
-FNN,FE,0.553897,-21645689184,-4329137836,9680246487,,,
-,,,,,,,,
-MAE best scores,,,,,,,,
-Model,Dataset,Best score,,,,,,
-FNN,Full,0.022492,,,,,,
-FNN,FE,0.025643,,,,,,
-SAR,FE,0.0277,,,,,,
-FNN,Reduced,0.028205,,,,,,
-SAR,Reduced,0.0308,,,,,,
-GWR,Reduced,0.037145,,,,,,
-,,,,,,,,
-MSE best scores,,,,,,,,
-Model,Dataset,Best score,,,,,,
-FNN,Full,0.000822,,,,,,
-SAR,FE,0.0012,,,,,,
-FNN,Reduced,0.001248,,,,,,
-FNN,FE,0.001384,,,,,,
-SAR,Reduced,0.0015,,,,,,
-GWR,Reduced,0.002275,,,,,,
-,,,,,,,,
-R2 best scores,,,,,,,,
-Model,Dataset,Best score,,,,,,
-FNN,Full,0.680459,,,,,,
-FNN,FE,0.553897,,,,,,
-FNN,Reduced,0.505411,,,,,,
-SAR,FE,0.4157,,,,,,
-SAR,Reduced,0.4,,,,,,
-GWR,Reduced,-0.087753,,,,,,
-,,,,,,,,
-MAE worst scores,,,,,,,,
-Model,Dataset,Worst score,,,,,,
-FNN,FE,258.53549,,,,,,
-GWR,Reduced,0.057098,,,,,,
-SAR,Reduced,0.0486,,,,,,
-SAR,FE,0.0453,,,,,,
-FNN,Full,0.042764,,,,,,
-FNN,Reduced,0.042735,,,,,,
-,,,,,,,,
-MSE worst scores,,,,,,,,
-Model,Dataset,Worst score,,,,,,
-FNN,FE,34282500.96,,,,,,
-GWR,Reduced,0.005164,,,,,,
-SAR,Reduced,0.0039,,,,,,
-SAR,FE,0.0036,,,,,,
-FNN,Reduced,0.002707,,,,,,
-FNN,Full,0.00258,,,,,,
-,,,,,,,,
-R2 worst scores,,,,,,,,
-Model,Dataset,Worst score,,,,,,
-FNN,FE,-21645689184,,,,,,
-FNN,Full,-0.628751,,,,,,
-FNN,Reduced,-0.595766,,,,,,
-GWR,Reduced,-0.58459,,,,,,
-SAR,Reduced,-0.1149,,,,,,
-SAR,FE,0.1173,,,,,,
-,,,,,,,,
-MAE standard deviations,,,,,,,,
-Model,Dataset,Std dev,,,,,,
-FNN,FE,115.605786,,,,,,
-GWR,Reduced,0.008443,,,,,,
-FNN,Full,0.00819,,,,,,
-SAR,Reduced,0.007131,,,,,,
-SAR,FE,0.006916,,,,,,
-FNN,Reduced,0.006586,,,,,,
-,,,,,,,,
-MSE standard deviations,,,,,,,,
-Model,Dataset,Std dev,,,,,,
-FNN,FE,15331600.52,,,,,,
-GWR,Reduced,0.001245,,,,,,
-SAR,Reduced,0.00095,,,,,,
-SAR,FE,0.00095,,,,,,
-FNN,Full,0.00073,,,,,,
-FNN,Reduced,0.000627,,,,,,
-,,,,,,,,
-R2 standard deviations,,,,,,,,
-Model,Dataset,Std dev,,,,,,
-FNN,FE,9680246487,,,,,,
-FNN,Full,0.540425,,,,,,
-FNN,Reduced,0.453421,,,,,,
-GWR,Reduced,0.192718,,,,,,
-SAR,Reduced,0.184177,,,,,,
-SAR,FE,0.116431,,,,,,
-,,,,,,,,
-ANN full results,,,,,,,,
+
+Experiment 1
+Model,Metric,Best score,Worst score,Mean score,Std dev
+FNN,MAE,0.022492,0.042764,0.031006,0.00819
+FNN,MSE,0.000822,0.00258,0.001606,0.00073
+FNN,R2,0.680459,-0.628751,0.3274,0.540425
+Regularised FNN,MAE,0.022371,0.034361,0.029067,0.005374
+Regularised FNN,MSE,0.000812,0.002175,0.001485,0.000572
+Regularised FNN,R2,0.675544,-0.133247,0.406147,0.346366
+
+Experiment 2
+Model,Metric,Best score,Worst score,Mean score,Std dev
+FNN,MAE,0.025643,258.53549,51.733573,115.605786
+FNN,MSE,0.001384,34282500.964439,6856500.194506,15331600.518133
+FNN,R2,0.553897,-21645689183.54926,-4329137836.448632,9680246486.99564
+Regularised FNN,MAE,0.024191,0.039198,0.028639,0.006087
+Regularised FNN,MSE,0.000931,0.002752,0.001459,0.000748
+Regularised FNN,R2,0.663598,0.295601,0.479114,0.134301
+SAR,MAE,0.028,0.0452,0.0347,0.006672
+SAR,MSE,0.0012,0.0036,0.00208,0.000944
+SAR,R2,0.3713,0.1311,0.26526,0.088791
+
+Experiment 3
+Model,Metric,Best score,Worst score,Mean score,Std dev
+FNN,MAE,0.028205,0.042735,0.035207,0.006586
+FNN,MSE,0.001248,0.002707,0.001978,0.000627
+FNN,R2,0.505411,-0.595766,0.206481,0.453421
+Regularised FNN,MAE,0.024078,0.038555,0.029927,0.005606
+Regularised FNN,MSE,0.000968,0.002572,0.001583,0.000646
+Regularised FNN,R2,0.493851,0.394102,0.438631,0.041637
+SAR,MAE,0.0308,0.0486,0.03672,0.007131
+SAR,MSE,0.0015,0.0039,0.00228,0.00095
+SAR,R2,0.4,-0.1149,0.16852,0.184177
+GWR,MAE,0.037145,0.057098,0.046388,0.008443
+GWR,MSE,0.002275,0.005164,0.003661,0.001245
+GWR,R2,-0.087753,-0.58459,-0.331267,0.192718
+
+MAE summary
+Model,Dataset,Best score,Worst score,Mean score,Std dev
+Regularised FNN,FE,0.024191,0.039198,0.028639,0.006087
+Regularised FNN,Full,0.022371,0.034361,0.029067,0.005374
+Regularised FNN,Reduced,0.024078,0.038555,0.029927,0.005606
+FNN,Full,0.022492,0.042764,0.031006,0.00819
+SAR,FE,0.028,0.0452,0.0347,0.006672
+FNN,Reduced,0.028205,0.042735,0.035207,0.006586
+SAR,Reduced,0.0308,0.0486,0.03672,0.007131
+GWR,Reduced,0.037145,0.057098,0.046388,0.008443
+FNN,FE,0.025643,258.53549,51.733573,115.605786
+
+MSE summary
+Model,Dataset,Best score,Worst score,Mean score,Std dev
+Regularised FNN,FE,0.000931,0.002752,0.001459,0.000748
+Regularised FNN,Full,0.000812,0.002175,0.001485,0.000572
+Regularised FNN,Reduced,0.000968,0.002572,0.001583,0.000646
+FNN,Full,0.000822,0.00258,0.001606,0.00073
+FNN,Reduced,0.001248,0.002707,0.001978,0.000627
+SAR,FE,0.0012,0.0036,0.00208,0.000944
+SAR,Reduced,0.0015,0.0039,0.00228,0.00095
+GWR,Reduced,0.002275,0.005164,0.003661,0.001245
+FNN,FE,0.001384,34282500.964439,6856500.194506,15331600.518133
+
+R2 summary
+Model,Dataset,Best score,Worst score,Mean score,Std dev
+Regularised FNN,FE,0.663598,0.295601,0.479114,0.134301
+Regularised FNN,Reduced,0.493851,0.394102,0.438631,0.041637
+Regularised FNN,Full,0.675544,-0.133247,0.406147,0.346366
+FNN,Full,0.680459,-0.628751,0.3274,0.540425
+SAR,FE,0.3713,0.1311,0.26526,0.088791
+FNN,Reduced,0.505411,-0.595766,0.206481,0.453421
+SAR,Reduced,0.4,-0.1149,0.16852,0.184177
+GWR,Reduced,-0.087753,-0.58459,-0.331267,0.192718
+FNN,FE,0.553897,-21645689183.54926,-4329137836.448632,9680246486.99564
+
+MAE best scores
+Model,Dataset,Best score
+Regularised FNN,Full,0.022371
+FNN,Full,0.022492
+Regularised FNN,Reduced,0.024078
+Regularised FNN,FE,0.024191
+FNN,FE,0.025643
+SAR,FE,0.028
+FNN,Reduced,0.028205
+SAR,Reduced,0.0308
+GWR,Reduced,0.037145
+
+MSE best scores
+Model,Dataset,Best score
+Regularised FNN,Full,0.000812
+FNN,Full,0.000822
+Regularised FNN,FE,0.000931
+Regularised FNN,Reduced,0.000968
+SAR,FE,0.0012
+FNN,Reduced,0.001248
+FNN,FE,0.001384
+SAR,Reduced,0.0015
+GWR,Reduced,0.002275
+
+R2 best scores
+Model,Dataset,Best score
+FNN,Full,0.680459
+Regularised FNN,Full,0.675544
+Regularised FNN,FE,0.663598
+FNN,FE,0.553897
+FNN,Reduced,0.505411
+Regularised FNN,Reduced,0.493851
+SAR,Reduced,0.4
+SAR,FE,0.3713
+GWR,Reduced,-0.087753
+
+MAE worst scores
+Model,Dataset,Worst score
+FNN,FE,258.53549
+GWR,Reduced,0.057098
+SAR,Reduced,0.0486
+SAR,FE,0.0452
+FNN,Full,0.042764
+FNN,Reduced,0.042735
+Regularised FNN,FE,0.039198
+Regularised FNN,Reduced,0.038555
+Regularised FNN,Full,0.034361
+
+MSE worst scores
+Model,Dataset,Worst score
+FNN,FE,34282500.964439
+GWR,Reduced,0.005164
+SAR,Reduced,0.0039
+SAR,FE,0.0036
+Regularised FNN,FE,0.002752
+FNN,Reduced,0.002707
+FNN,Full,0.00258
+Regularised FNN,Reduced,0.002572
+Regularised FNN,Full,0.002175
+
+R2 worst scores
+Model,Dataset,Worst score
+FNN,FE,-21645689183.54926
+FNN,Full,-0.628751
+FNN,Reduced,-0.595766
+GWR,Reduced,-0.58459
+Regularised FNN,Full,-0.133247
+SAR,Reduced,-0.1149
+SAR,FE,0.1311
+Regularised FNN,FE,0.295601
+Regularised FNN,Reduced,0.394102
+
+MAE standard deviations
+Model,Dataset,Std dev
+FNN,FE,115.605786
+GWR,Reduced,0.008443
+FNN,Full,0.00819
+SAR,Reduced,0.007131
+SAR,FE,0.006672
+FNN,Reduced,0.006586
+Regularised FNN,FE,0.006087
+Regularised FNN,Reduced,0.005606
+Regularised FNN,Full,0.005374
+
+MSE standard deviations
+Model,Dataset,Std dev
+FNN,FE,15331600.518133
+GWR,Reduced,0.001245
+SAR,Reduced,0.00095
+SAR,FE,0.000944
+Regularised FNN,FE,0.000748
+FNN,Full,0.00073
+Regularised FNN,Reduced,0.000646
+FNN,Reduced,0.000627
+Regularised FNN,Full,0.000572
+
+R2 standard deviations
+Model,Dataset,Std dev
+FNN,FE,9680246486.99564
+FNN,Full,0.540425
+FNN,Reduced,0.453421
+Regularised FNN,Full,0.346366
+GWR,Reduced,0.192718
+SAR,Reduced,0.184177
+Regularised FNN,FE,0.134301
+SAR,FE,0.088791
+Regularised FNN,Reduced,0.041637
+
+ANN full results
 Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function,MAE,MSE,R2
 0,3,"[372, 208, 173]",30,0.015686,MAE,0.022492,0.000822,0.56087
 1,4,"[142, 258, 116, 402]",10,0.001662,MAE,0.024638,0.000991,0.680459
 2,2,"[235, 385]",37,0.021922,MSE,0.030103,0.001595,0.455013
 3,4,"[261, 197, 334, 281]",58,0.006583,MSE,0.035033,0.002044,0.569407
 4,4,"[245, 198, 302, 225]",15,0.069612,MAE,0.042764,0.00258,-0.628751
-,,,,,,,,
-ANN FE results,,,,,,,,
+
+ANN FE results
 Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function,MAE,MSE,R2
 0,2,"[26, 30]",20,0.045979,MAE,0.02989,0.001395,0.25492
 1,2,"[23, 22]",17,0.057087,MSE,0.025643,0.001384,0.553897
 2,3,"[19, 15, 29]",36,0.056168,MAE,0.04239,0.002932,-0.001613
 3,2,"[15, 16]",46,0.069274,MSE,0.034452,0.002379,0.498895
-4,4,"[14, 27, 16, 8]",49,0.038735,MSE,258.53549,34282500.96,-21645689184
-,,,,,,,,
-ANN reduced results,,,,,,,,
+4,4,"[14, 27, 16, 8]",49,0.038735,MSE,258.53549,34282500.964439,-21645689183.54926
+
+ANN reduced results
 Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function,MAE,MSE,R2
 0,1,[5],34,0.029194,MAE,0.028205,0.001248,0.333451
 1,1,[3],35,0.04503,MSE,0.030152,0.001535,0.505411
 2,1,[6],35,0.023675,MSE,0.033473,0.001875,0.359559
 3,3,"[2, 7, 6]",42,0.012075,MSE,0.041472,0.002707,0.42975
 4,1,[5],35,0.098566,MSE,0.042735,0.002527,-0.595766
-,,,,,,,,
-SAR FE results,,,,,,,,
-Outer CV split,Weighting method,Weighting param,MAE,MSE,R2,,,
-1,knn,5,0.0277,0.0012,0.3713,,,
-2,distance,1516,0.032,0.0018,0.4157,,,
-3,distance,1297,0.0358,0.0021,0.2968,,,
-4,knn,7,0.0453,0.0036,0.2459,,,
-5,knn,3,0.0299,0.0014,0.1173,,,
-,,,,,,,,
-SAR reduced results,,,,,,,,
-Outer CV split,Weighting method,Weighting param,MAE,MSE,R2,,,
-1,knn,5,0.0308,0.0015,0.1757,,,
-2,distance,1516,0.0324,0.0019,0.4,,,
-3,distance,1297,0.0378,0.0023,0.2099,,,
-4,knn,7,0.0486,0.0039,0.1719,,,
-5,knn,3,0.034,0.0018,-0.1149,,,
-,,,,,,,,
-GWR reduced results,,,,,,,,
-Outer CV split,Kernel,Criterion,MAE,MSE,R2,,,
-0,bisquare,AICc,0.037145,0.002275,-0.214966,,,
-1,bisquare,AICc,0.051282,0.004464,-0.438794,,,
-2,bisquare,BIC,0.047725,0.003894,-0.330233,,,
-3,bisquare,BIC,0.057098,0.005164,-0.087753,,,
-4,bisquare,CV,0.03869,0.00251,-0.58459,,,
-,,,,,,,,
-Hypothesis testing results,,,,,,,,
-Metric,Model 1,Model 2,Dataset,Statistic,P-value,,,
-MAE,ANN,SAR,FE,9,0.6875,,,
-MAE,ANN,SAR,Reduced,5,0.3125,,,
-MAE,ANN,GWR,Reduced,1,0.0625,,,
-MSE,ANN,SAR,FE,9,0.6875,,,
-MSE,ANN,SAR,Reduced,4,0.21875,,,
-MSE,ANN,GWR,Reduced,1,0.0625,,,
-R2,ANN,SAR,FE,5,0.78125,,,
-R2,ANN,SAR,Reduced,10,0.3125,,,
-R2,ANN,GWR,Reduced,14,0.0625,,,
-,,,,,,,,
-FNN hypothesis testing results,,,,,,,,
-Metric,Model 1,Model 1 dataset,Model 2,Model 2 dataset,Statistic,P-value,,
-MAE,ANN,Full,SAR,FE,5,0.3125,,
-MAE,ANN,Full,SAR,Reduced,4,0.21875,,
-MAE,ANN,Full,GWR,Reduced,1,0.0625,,
-MSE,ANN,Full,SAR,FE,4,0.21875,,
-MSE,ANN,Full,SAR,Reduced,3,0.15625,,
-MSE,ANN,Full,GWR,Reduced,1,0.0625,,
-R2,ANN,Full,SAR,FE,10,0.3125,,
-R2,ANN,Full,SAR,Reduced,10,0.3125,,
-R2,ANN,Full,GWR,Reduced,14,0.0625,,
+
+Regularised ANN full results
+Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function,MAE,MSE,R2
+0,3,"[189, 201, 253]",12,0.002156,MSE,0.022371,0.000812,0.570213
+1,4,"[142, 258, 116, 402]",10,0.001662,MAE,0.024555,0.000994,0.675544
+2,2,"[235, 385]",37,0.021922,MSE,0.033573,0.002175,0.254383
+3,2,"[238, 266]",42,0.012075,MSE,0.030473,0.001608,0.663843
+4,3,"[304, 285, 224]",26,0.072849,MSE,0.034361,0.001834,-0.133247
+
+Regularised ANN FE results
+Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function,MAE,MSE,R2
+0,2,"[19, 24]",36,0.061224,MSE,0.024191,0.000931,0.507097
+1,2,"[25, 16]",35,0.009857,MSE,0.024995,0.00103,0.663598
+2,2,"[30, 21]",48,0.004139,MAE,0.027945,0.001444,0.504844
+3,1,[22],52,0.020386,MAE,0.039198,0.002752,0.424432
+4,3,"[24, 12, 24]",26,0.026751,MSE,0.026865,0.00114,0.295601
+
+Regularised ANN reduced results
+Outer CV split,No. of layers,No. of nodes,Batch size,Learning rate,Loss function,MAE,MSE,R2
+0,3,"[10, 7, 6]",49,0.070836,MSE,0.025971,0.001056,0.440939
+1,1,[10],35,0.096529,MSE,0.031116,0.00155,0.493851
+2,4,"[7, 9, 9, 6]",22,0.00779,MAE,0.029913,0.001767,0.394102
+3,1,[10],26,0.026751,MSE,0.038555,0.002572,0.462237
+4,3,"[9, 11, 6]",58,0.024261,MSE,0.024078,0.000968,0.402024
+
+SAR FE results
+Outer CV split,Weighting method,Weighting param,MAE,MSE,R2
+1,knn,5,0.028,0.0012,0.3713
+2,distance,1516,0.0347,0.0022,0.2718
+3,distance,1297,0.0356,0.002,0.3078
+4,knn,7,0.0452,0.0036,0.2443
+5,knn,3,0.03,0.0014,0.1311
+
+SAR reduced results
+Outer CV split,Weighting method,Weighting param,MAE,MSE,R2
+1,knn,5,0.0308,0.0015,0.1757
+2,distance,1516,0.0324,0.0019,0.4
+3,distance,1297,0.0378,0.0023,0.2099
+4,knn,7,0.0486,0.0039,0.1719
+5,knn,3,0.034,0.0018,-0.1149
+
+GWR reduced results
+Outer CV split,Kernel,Criterion,MAE,MSE,R2
+0,bisquare,AICc,0.037145,0.002275,-0.214966
+1,bisquare,AICc,0.051282,0.004464,-0.438794
+2,bisquare,BIC,0.047725,0.003894,-0.330233
+3,bisquare,BIC,0.057098,0.005164,-0.087753
+4,bisquare,CV,0.03869,0.00251,-0.58459
+
+ANN same dataset hypothesis testing results
+Metric,Model 1,Model 2,Dataset,Statistic,P-value
+MAE,ANN,SAR,FE,8.0,0.59375
+MAE,ANN,SAR,Reduced,5.0,0.3125
+MAE,ANN,GWR,Reduced,1.0,0.0625
+MSE,ANN,SAR,FE,9.0,0.6875
+MSE,ANN,SAR,Reduced,4.0,0.21875
+MSE,ANN,GWR,Reduced,1.0,0.0625
+R2,ANN,SAR,FE,5.0,0.78125
+R2,ANN,SAR,Reduced,10.0,0.3125
+R2,ANN,GWR,Reduced,14.0,0.0625
+
+Regularised FNN same dataset hypothesis testing results
+Metric,Model 1,Model 2,Dataset,Statistic,P-value
+MAE,Regularised ANN,ANN,Full,3.0,0.15625
+MAE,Regularised ANN,ANN,FE,2.0,0.09375
+MAE,Regularised ANN,ANN,Reduced,1.0,0.0625
+MAE,Regularised ANN,SAR,FE,0.0,0.03125
+MAE,Regularised ANN,SAR,Reduced,0.0,0.03125
+MAE,Regularised ANN,GWR,Reduced,0.0,0.03125
+MSE,Regularised ANN,ANN,Full,5.0,0.3125
+MSE,Regularised ANN,ANN,FE,2.0,0.09375
+MSE,Regularised ANN,ANN,Reduced,1.0,0.0625
+MSE,Regularised ANN,SAR,FE,0.0,0.03125
+MSE,Regularised ANN,SAR,Reduced,0.0,0.03125
+MSE,Regularised ANN,GWR,Reduced,0.0,0.03125
+R2,Regularised ANN,ANN,Full,10.0,0.3125
+R2,Regularised ANN,ANN,FE,14.0,0.0625
+R2,Regularised ANN,ANN,Reduced,14.0,0.0625
+R2,Regularised ANN,SAR,FE,15.0,0.03125
+R2,Regularised ANN,SAR,Reduced,15.0,0.03125
+R2,Regularised ANN,GWR,Reduced,15.0,0.03125
+
+ANN cross dataset hypothesis testing results
+Metric,Model 1,Model 1 dataset,Model 2,Model 2 dataset,Statistic,P-value
+MAE,ANN,Full,SAR,FE,5.0,0.3125
+MAE,ANN,Full,SAR,Reduced,4.0,0.21875
+MAE,ANN,Full,GWR,Reduced,1.0,0.0625
+MSE,ANN,Full,SAR,FE,3.0,0.15625
+MSE,ANN,Full,SAR,Reduced,3.0,0.15625
+MSE,ANN,Full,GWR,Reduced,1.0,0.0625
+R2,ANN,Full,SAR,FE,10.0,0.3125
+R2,ANN,Full,SAR,Reduced,10.0,0.3125
+R2,ANN,Full,GWR,Reduced,14.0,0.0625
+
+Regularised FNN cross dataset hypothesis testing results
+Metric,Model 1,Model 1 dataset,Model 2,Model 2 dataset,Statistic,P-value
+MAE,Regularised ANN,Full,ANN,Full,3.0,0.15625
+MAE,Regularised ANN,Full,ANN,FE,0.0,0.03125
+MAE,Regularised ANN,Full,ANN,Reduced,1.0,0.0625
+MAE,Regularised ANN,Full,SAR,FE,2.0,0.09375
+MAE,Regularised ANN,Full,SAR,Reduced,1.0,0.0625
+MAE,Regularised ANN,Full,GWR,Reduced,0.0,0.03125
+MSE,Regularised ANN,Full,ANN,Full,5.0,0.3125
+MSE,Regularised ANN,Full,ANN,FE,0.0,0.03125
+MSE,Regularised ANN,Full,ANN,Reduced,1.0,0.0625
+MSE,Regularised ANN,Full,SAR,FE,4.0,0.21875
+MSE,Regularised ANN,Full,SAR,Reduced,1.0,0.0625
+MSE,Regularised ANN,Full,GWR,Reduced,0.0,0.03125
+R2,Regularised ANN,Full,ANN,Full,10.0,0.3125
+R2,Regularised ANN,Full,ANN,FE,15.0,0.03125
+R2,Regularised ANN,Full,ANN,Reduced,14.0,0.0625
+R2,Regularised ANN,Full,SAR,FE,11.0,0.21875
+R2,Regularised ANN,Full,SAR,Reduced,14.0,0.0625
+R2,Regularised ANN,Full,GWR,Reduced,15.0,0.03125
