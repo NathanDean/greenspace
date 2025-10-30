@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 
+# Separate df into features, labels, and fold ids
 def separate_features(df):
     # Drop R columns
     df = df.drop(columns=[col for col in df.columns if "fold_id_r" in col])
@@ -26,15 +27,19 @@ def separate_features(df):
     return labels, outer_fold_ids, outer_splits, inner_fold_ids, inner_splits, features
 
 
+# Split df into training and validation sets
 def split_data(
     current_split, fold_ids, features, labels, is_outer=False, inner_fold_ids=None
 ):
+    # Separate training and validation sets
     is_in_validation_set = fold_ids == current_split
     is_in_training_set = ~is_in_validation_set
     train_features = features.loc[is_in_training_set]
     train_labels = labels.loc[is_in_training_set]
     val_features = features.loc[is_in_validation_set]
     val_labels = labels.loc[is_in_validation_set]
+
+    # If splitting data for outer cross-validation loop, get fold ids for inner cross-validation loop
     current_inner_fold_ids = None
     if is_outer:
         current_inner_fold_ids = inner_fold_ids.loc[is_in_training_set]
@@ -54,6 +59,7 @@ def get_evaluation_metrics(val_labels, predictions):
     return mae, mse, r2
 
 
+# Get average accuracy metrics from set of cross-validation results
 def get_avg_scores(cv_results):
     mae_scores = []
     mse_scores = []
@@ -71,6 +77,7 @@ def get_avg_scores(cv_results):
     return avg_mae, avg_mse, avg_r2
 
 
+# Get best performing hyperparameters from set of cross-validation results
 def get_optimal_hyperparameters(hp_combinations, cv_results):
     hp_combination_scores = []
     for i in range(len(hp_combinations)):

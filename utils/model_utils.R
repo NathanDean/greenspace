@@ -4,6 +4,7 @@ library(sf)
 library(sfdep)
 library(Metrics)
 
+# Separate cross-validation fold ids from df and drop unneeded columns
 prepare_data <- function(df) {
   drop_cols <- names(df)[grepl("python", names(df))]
   df <- df[, !names(df) %in% drop_cols]
@@ -26,28 +27,34 @@ prepare_data <- function(df) {
     df = df
   )
 
+  # Return separated data
   prepared_data
 }
 
 
+# Split df into training and validation sets
 split_data <- function(df, current_split, fold_ids, is_outer = FALSE, inner_fold_ids = NULL) {
   is_in_validation_set <- fold_ids == current_split
   is_in_training_set <- !is_in_validation_set
   train_df <- df[is_in_training_set, ]
   val_df <- df[is_in_validation_set, ]
+
+  # If splitting data for outer cross-validation loop, get fold ids for inner cross-validation loop
   current_inner_fold_ids <- NULL
   if (is_outer) {
     current_inner_fold_ids <- inner_fold_ids[is_in_training_set, , drop = FALSE] # Removes rows not in current training set
-    rownames(current_inner_fold_ids) <- NULL
+    rownames(current_inner_fold_ids) <- NULL # Reset row numbers
   }
   rownames(train_df) <- NULL
-  rownames(val_df) <- NULL # Reset row numbers so they align with spatial weight matrix for predictions
+  rownames(val_df) <- NULL
+
   split_data <- list(
     train_df = train_df,
     val_df = val_df,
     current_inner_fold_ids = current_inner_fold_ids
   )
 
+  # Return split data
   split_data
 }
 
@@ -78,7 +85,6 @@ create_spatial_weights <- function(df, hps) {
   w
 }
 
-# Function - Get evaluation metrics for set of predictions
 get_evaluation_metrics <- function(labels, predictions) {
   mae <- mae(labels, predictions)
   mse <- mse(labels, predictions)
@@ -88,7 +94,7 @@ get_evaluation_metrics <- function(labels, predictions) {
   list(mae = mae, mse = mse, r2 = r2)
 }
 
-# Function - Average prediction scores for set of cross-validation results
+# Get average accuracy metrics from set of cross-validation results
 get_avg_scores <- function(cv_results) {
   mae_scores <- c()
   mse_scores <- c()
@@ -108,7 +114,7 @@ get_avg_scores <- function(cv_results) {
   avgs
 }
 
-# Function - Find hyperparameter combination that produced best results from a set of cross-validation results
+# Get best performing hyperparameters from set of cross-validation results
 get_optimal_hps <- function(hp_combinations, cv_results) {
   hp_combination_scores <- c()
 

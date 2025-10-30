@@ -38,12 +38,13 @@ def evaluate_gwr(df):
     )
     predictor_cols = features.columns
 
+    # Outer cross-validation loop to evaluate model
     for current_outer_split in outer_splits:
 
         hp_combinations = []
         cv_results = []
 
-        # Get training and validation sets for current outer split
+        # Get outer cross-validation splits
         (
             outer_train_features,
             outer_train_labels,
@@ -62,18 +63,18 @@ def evaluate_gwr(df):
         # Loop to test 8 hyperparameter combinations
         for i in range(8):
 
-            # Set random hps
+            # Set random hyperparameters
             kernel, criterion = get_random_hyperparameters()
             current_hps = {"kernel": kernel, "criterion": criterion}
             hp_combinations.append(current_hps)
 
-            # Inner cross-validation for model selection
+            # Inner cross-validation for to select model
             for current_inner_split in inner_splits:
                 print(
                     f"\n --- Outer split {current_outer_split} - Training model {i} on inner split {current_inner_split} ---"
                 )
 
-                # Get training and validation sets for current inner split
+                # # Separate df into features and labels
                 (
                     inner_train_features,
                     inner_train_labels,
@@ -89,7 +90,6 @@ def evaluate_gwr(df):
                     outer_train_labels,
                 )
 
-                # Get model inputs
                 print("Getting inputs...")
                 (
                     inner_train_coords,
@@ -108,7 +108,6 @@ def evaluate_gwr(df):
                     get_gwr_inputs(inner_val_features, predictor_cols, inner_val_labels)
                 )
 
-                # Build model
                 print("Building model...")
                 model = GWR(
                     inner_train_coords,
@@ -118,19 +117,16 @@ def evaluate_gwr(df):
                     kernel=kernel,
                 )
 
-                # Fit model
                 model.fit()
 
-                # Get predictions
                 print("Getting predictions...")
                 results = model.predict(inner_val_coords, inner_val_predictors)
                 predictions = results.predy
 
-                # Get accuracy scores
                 print("Evaluating predictions...")
                 mae, mse, r2 = get_evaluation_metrics(inner_val_labels, predictions)
 
-                # Add scores for current fold to results
+                # Add scores for current split to results
                 cv_results.append(
                     {
                         "hp_combination": i,
@@ -146,10 +142,9 @@ def evaluate_gwr(df):
             f"\n --- Outer split {current_outer_split} - Training optimised model ---"
         )
 
-        # Get optimal hyperparameters for current outer split training set
+        # Get optimal hyperparameters for current training set
         opt_hps = get_optimal_hyperparameters(hp_combinations, cv_results)
 
-        # Get model inputs
         print("Getting inputs...")
         (
             outer_train_coords,
@@ -168,7 +163,6 @@ def evaluate_gwr(df):
             outer_val_features, predictor_cols, outer_val_labels
         )
 
-        # Build model
         print("Building model...")
         model = GWR(
             outer_train_coords,
@@ -180,12 +174,10 @@ def evaluate_gwr(df):
 
         model.fit()
 
-        # Get predictions
         print("Getting predictions...")
         results = model.predict(outer_val_coords, outer_val_predictors)
         predictions = results.predy
 
-        # Get accuracy scores
         print("Evaluating predictions...")
         mae, mse, r2 = get_evaluation_metrics(outer_val_labels, predictions)
 

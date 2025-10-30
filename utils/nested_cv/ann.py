@@ -114,7 +114,7 @@ def evaluate_ann(df, regularised=False):
         features,
     ) = separate_features(df)
 
-    # Outer cross-validation loop to evaluate models
+    # Outer cross-validation loop to evaluate model
     for current_outer_split in outer_cv_splits:
 
         hp_combinations = []
@@ -153,13 +153,13 @@ def evaluate_ann(df, regularised=False):
             }
             hp_combinations.append(current_hps)
 
-            # Get inner cross-validation splits
+            # Inner cross-validation loop to select model
             for current_inner_split in inner_cv_splits:
                 print(
                     f"\n --- Outer split {current_outer_split}: Training model {i} on inner split {current_inner_split} ---"
                 )
 
-                # Separate features, labels and fold ids from df
+                # Separate df into features and labels
                 (
                     inner_train_features,
                     inner_train_labels,

@@ -1,4 +1,3 @@
-# Imports
 library(here)
 source(here("utils", "db_utils.R"))
 source(here("utils/nested_cv", "sar.R"))
@@ -10,5 +9,4 @@ df <- df[, !grepl("prevalent", names(df))]
 
 results <- evaluate_sar(df)
 
-# Save output
 write_json(outer_cv_results, "outputs/model_results/sar_fe_reduced.json", auto_unbox = TRUE, pretty = TRUE)

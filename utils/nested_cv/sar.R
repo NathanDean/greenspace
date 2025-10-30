@@ -9,7 +9,6 @@ library(here)
 source(here("utils", "model_utils.R"))
 
 build_model <- function(df, hps) {
-  # Create spatial weight matrix for train_df
   print("Creating spatial weight matrix for train_df...")
   w <- create_spatial_weights(df, hps)
 
@@ -17,7 +16,6 @@ build_model <- function(df, hps) {
   df_no_geom <- st_drop_geometry(df)
   rownames(df_no_geom) <- NULL
 
-  # Fit SAR model using spatial weights
   print("Fitting model...")
   system.time(
     sar_model <- lagsarlm(
@@ -53,11 +51,11 @@ get_random_hyperparameters <- function() {
     hps$is_queen <- is_queen
   }
 
+  # Return hyperparameters
   hps
 }
 
 evaluate_sar <- function(df) {
-  # Initialise results list
   outer_cv_results <- vector(mode = "list", length = 0)
 
   # Clean data and separate fold ids
@@ -68,7 +66,7 @@ evaluate_sar <- function(df) {
   inner_splits <- prepared_data$inner_splits
   df <- prepared_data$df
 
-  # Evaluate using nested cross-validation
+  # Outer cross-validation loop to evaluate model
   for (current_outer_split in outer_splits) {
     hp_combinations <- vector(mode = "list", length = 0)
     inner_cv_results <- vector(mode = "list", length = 0)
@@ -85,7 +83,7 @@ evaluate_sar <- function(df) {
       hps <- get_random_hyperparameters()
       hp_combinations <- c(hp_combinations, list(hps))
 
-      # Inner cross-validation to evaluate hyperparameter combinations
+      # Inner cross-validation to select model
       for (current_inner_split in inner_splits) {
         print(paste("--- Outer split ", current_outer_split, ": Training model ", i, " on inner split ", current_inner_split, "---"))
 
@@ -94,15 +92,12 @@ evaluate_sar <- function(df) {
         inner_train_df <- inner_split_data$train_df
         inner_val_df <- inner_split_data$val_df
 
-        # Build model using inner_train_df
         print("Building model...")
         model <- build_model(inner_train_df, hps)
 
-        # Create spatial weight matrix for inner_valn_df
         print("Creating spatial weight matrix...")
         inner_val_w <- create_spatial_weights(inner_val_df, hps)
 
-        # Calculate predictions on inner_val_df
         print("Calculating predictions...")
         inner_val_df_no_geom <- st_drop_geometry(inner_val_df)
 
@@ -113,7 +108,6 @@ evaluate_sar <- function(df) {
           zero.policy = TRUE
         )
 
-        # Calculate accuracy metrics
         print("Evaluating predictions...")
         labels <- inner_val_df$very_good_health
         metrics <- get_evaluation_metrics(labels, predictions)
@@ -140,17 +134,15 @@ evaluate_sar <- function(df) {
 
     print(paste("--- Outer split ", current_outer_split, ": Training on optimised model"))
 
+    # Get optimal hps for current training set
     optimal_hps <- get_optimal_hps(hp_combinations, inner_cv_results)
 
-    # Build model using train_df
     print("Building model...")
     model <- build_model(outer_train_df, optimal_hps)
 
-    # Create spatial weight matrix for validation_df
     print("Creating spatial weight matrix...")
     outer_val_w <- create_spatial_weights(outer_val_df, optimal_hps)
 
-    # Calculate predictions on validation_df
     print("Calculating predictions...")
     outer_val_df_no_geom <- st_drop_geometry(outer_val_df)
     predictions <- predict(
@@ -160,7 +152,6 @@ evaluate_sar <- function(df) {
       zero.policy = TRUE
     )
 
-    # Calculate accuracy metrics
     print("Evaluating predictions...")
     labels <- outer_val_df$very_good_health
     metrics <- get_evaluation_metrics(labels, predictions)
