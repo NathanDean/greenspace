@@ -79,7 +79,7 @@ def build_and_evaluate_model(
     return mae, mse, r2
 
 
-def evaluate_gwr(df):
+def evaluate_gwr(df, search_iterations):
     outer_cv_results = []
     labels, outer_fold_ids, outer_splits, inner_fold_ids, inner_splits, features = (
         separate_features(df)
@@ -108,8 +108,8 @@ def evaluate_gwr(df):
             inner_fold_ids=inner_fold_ids,
         )
 
-        # Loop to test 8 hyperparameter combinations
-        for i in range(8):
+        # Loop to test hyperparameter combinations
+        for i in range(search_iterations):
 
             # Set random hyperparameters
             kernel, criterion = get_random_hyperparameters()

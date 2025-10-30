@@ -86,7 +86,7 @@ build_and_evaluate_model <- function(train_df, val_df, hps) {
 }
 
 
-evaluate_sar <- function(df) {
+evaluate_sar <- function(df, search_iterations) {
   outer_cv_results <- vector(mode = "list", length = 0)
 
   # Clean data and separate fold ids
@@ -108,8 +108,8 @@ evaluate_sar <- function(df) {
     outer_val_df <- outer_split_data$val_df
     current_inner_fold_ids <- outer_split_data$current_inner_fold_ids
 
-    # Loop to test 8 hyperparameter combinations
-    for (i in 1:8) {
+    # Loop to test hyperparameter combinations
+    for (i in seq_len(search_iterations)) {
       # Get random hyperparameters
       hps <- get_random_hyperparameters()
       hp_combinations <- c(hp_combinations, list(hps))

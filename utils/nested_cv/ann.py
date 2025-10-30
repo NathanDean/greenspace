@@ -102,7 +102,7 @@ def build_and_evaluate_model(
     return mae, mse, r2
 
 
-def evaluate_ann(df, regularised=False):
+def evaluate_ann(df, search_iterations, regularised=False):
 
     outer_cv_results = []
     (
@@ -136,8 +136,8 @@ def evaluate_ann(df, regularised=False):
             inner_fold_ids=inner_fold_ids,
         )
 
-        # Loop to test 8 hyperparameter combinations
-        for i in range(8):
+        # Loop to test hyperparameter combinations
+        for i in range(search_iterations):
 
             # Get random hyperparameters
             no_of_layers, no_of_nodes, batch_size, learning_rate, loss_function = (
