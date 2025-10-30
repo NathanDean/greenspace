@@ -175,7 +175,7 @@ def evaluate_ann(df, regularised=False):
                     outer_train_labels,
                 )
 
-                # Evaluate model and return accuracy scores
+                # Build and evaluate model on current inner split
                 mae, mse, r2 = evaluate_model(
                     inner_train_features,
                     inner_train_labels,
@@ -211,7 +211,7 @@ def evaluate_ann(df, regularised=False):
         opt_learning_rate = opt_hps["learning_rate"]
         opt_loss_function = opt_hps["loss_function"]
 
-        # Evaluate model and return accuracy scores
+        # Build and evaluate model on current outer split
         mae, mse, r2 = evaluate_model(
             outer_train_features,
             outer_train_labels,
