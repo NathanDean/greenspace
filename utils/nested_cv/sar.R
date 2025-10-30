@@ -55,6 +55,37 @@ get_random_hyperparameters <- function() {
   hps
 }
 
+
+build_and_evaluate_model <- function(train_df, val_df, hps) {
+  print("Building model...")
+  model <- build_model(train_df, hps)
+
+  print("Creating spatial weight matrix...")
+  inner_val_w <- create_spatial_weights(val_df, hps)
+
+  print("Calculating predictions...")
+  inner_val_df_no_geom <- st_drop_geometry(val_df)
+
+  predictions <- predict(
+    model,
+    newdata = inner_val_df_no_geom,
+    listw = inner_val_w,
+    zero.policy = TRUE
+  )
+
+  print("Evaluating predictions...")
+  labels <- val_df$very_good_health
+  metrics <- get_evaluation_metrics(labels, predictions)
+
+  # Remove large variables to avoid memory issues
+  rm(model, inner_val_w, predictions)
+  gc()
+
+  # Return metrics
+  metrics
+}
+
+
 evaluate_sar <- function(df) {
   outer_cv_results <- vector(mode = "list", length = 0)
 
@@ -92,29 +123,13 @@ evaluate_sar <- function(df) {
         inner_train_df <- inner_split_data$train_df
         inner_val_df <- inner_split_data$val_df
 
-        print("Building model...")
-        model <- build_model(inner_train_df, hps)
-
-        print("Creating spatial weight matrix...")
-        inner_val_w <- create_spatial_weights(inner_val_df, hps)
-
-        print("Calculating predictions...")
-        inner_val_df_no_geom <- st_drop_geometry(inner_val_df)
-
-        predictions <- predict(
-          model,
-          newdata = inner_val_df_no_geom,
-          listw = inner_val_w,
-          zero.policy = TRUE
-        )
-
-        print("Evaluating predictions...")
-        labels <- inner_val_df$very_good_health
-        metrics <- get_evaluation_metrics(labels, predictions)
+        # Build and evaluate model on current inner split
+        metrics <- build_and_evaluate_model(inner_train_df, inner_val_df, hps)
         mae <- metrics$mae
         mse <- metrics$mse
         r2 <- metrics$r2
 
+        # Add scores for current inner split to results
         current_split_results <- list(
           hp_combination = i,
           inner_split = current_inner_split,
@@ -123,42 +138,22 @@ evaluate_sar <- function(df) {
           mse = mse,
           r2 = r2
         )
-
         inner_cv_results <- c(inner_cv_results, list(current_split_results))
-
-        # Remove large variables to avoid memory issues
-        rm(model, inner_val_w, predictions)
-        gc()
       }
     }
 
     print(paste("--- Outer split ", current_outer_split, ": Training on optimised model"))
 
-    # Get optimal hps for current training set
+    # Get optimal hps for current outer split
     optimal_hps <- get_optimal_hps(hp_combinations, inner_cv_results)
 
-    print("Building model...")
-    model <- build_model(outer_train_df, optimal_hps)
-
-    print("Creating spatial weight matrix...")
-    outer_val_w <- create_spatial_weights(outer_val_df, optimal_hps)
-
-    print("Calculating predictions...")
-    outer_val_df_no_geom <- st_drop_geometry(outer_val_df)
-    predictions <- predict(
-      model,
-      newdata = outer_val_df_no_geom,
-      listw = outer_val_w,
-      zero.policy = TRUE
-    )
-
-    print("Evaluating predictions...")
-    labels <- outer_val_df$very_good_health
-    metrics <- get_evaluation_metrics(labels, predictions)
+    # Build and evaluate model on current outer split
+    metrics <- build_and_evaluate_model(outer_train_df, outer_val_df, optimal_hps)
     mae <- metrics$mae
     mse <- metrics$mse
     r2 <- metrics$r2
 
+    # Add scores for current outer split to results
     current_split_results <- list(
       outer_split = current_outer_split,
       hps = optimal_hps,
@@ -167,12 +162,7 @@ evaluate_sar <- function(df) {
       r2 = r2,
       inner_cv_results = inner_cv_results
     )
-
     outer_cv_results <- c(outer_cv_results, list(current_split_results))
-
-    # Remove large variables to avoid memory issues
-    rm(model, outer_val_w, predictions)
-    gc()
   }
 
   # Return results

@@ -59,7 +59,7 @@ def build_early_stopper():
     return early_stopper
 
 
-def evaluate_model(
+def build_and_evaluate_model(
     train_features,
     train_labels,
     val_features,
@@ -176,7 +176,7 @@ def evaluate_ann(df, regularised=False):
                 )
 
                 # Build and evaluate model on current inner split
-                mae, mse, r2 = evaluate_model(
+                mae, mse, r2 = build_and_evaluate_model(
                     inner_train_features,
                     inner_train_labels,
                     inner_val_features,
@@ -189,7 +189,7 @@ def evaluate_ann(df, regularised=False):
                     regularised,
                 )
 
-                # Add scores to results
+                # Add scores for current inner split to results
                 inner_cv_results.append(
                     {
                         "hp_combination": i,
@@ -203,7 +203,7 @@ def evaluate_ann(df, regularised=False):
 
         print(f"--- Outer split {current_outer_split}: Training on optimised model ---")
 
-        # Get optimal hyperparameters for current training set
+        # Get optimal hyperparameters for current outer split
         opt_hps = get_optimal_hyperparameters(hp_combinations, inner_cv_results)
         opt_no_of_layers = opt_hps["no_of_layers"]
         opt_no_of_nodes = opt_hps["no_of_nodes"]
@@ -212,7 +212,7 @@ def evaluate_ann(df, regularised=False):
         opt_loss_function = opt_hps["loss_function"]
 
         # Build and evaluate model on current outer split
-        mae, mse, r2 = evaluate_model(
+        mae, mse, r2 = build_and_evaluate_model(
             outer_train_features,
             outer_train_labels,
             outer_val_features,
@@ -225,7 +225,7 @@ def evaluate_ann(df, regularised=False):
             regularised,
         )
 
-        # Add scores to results
+        # Add scores for current outer split to results
         outer_cv_results.append(
             {
                 "outer_split": current_outer_split,

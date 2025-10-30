@@ -31,7 +31,7 @@ def get_random_hyperparameters():
     return kernel, criterion
 
 
-def evaluate_model(
+def build_and_evaluate_model(
     train_features,
     train_labels,
     val_features,
@@ -139,7 +139,7 @@ def evaluate_gwr(df):
                 )
 
                 # Build and evaluate model on current inner split
-                mae, mse, r2 = evaluate_model(
+                mae, mse, r2 = build_and_evaluate_model(
                     inner_train_features,
                     inner_train_labels,
                     inner_val_features,
@@ -169,7 +169,7 @@ def evaluate_gwr(df):
         opt_hps = get_optimal_hyperparameters(hp_combinations, inner_cv_results)
 
         # Build and evaluate model on current outer split
-        mae, mse, r2 = evaluate_model(
+        mae, mse, r2 = build_and_evaluate_model(
             outer_train_features,
             outer_train_labels,
             outer_val_features,
@@ -179,6 +179,7 @@ def evaluate_gwr(df):
             opt_hps["criterion"],
         )
 
+        # Add scores for current outer split to results
         outer_cv_results.append(
             {
                 "outer_split": current_outer_split,
