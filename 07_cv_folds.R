@@ -2,12 +2,8 @@
 library(sf)
 library(blockCV)
 library(dotenv)
-
-load_dot_env()
-username <- Sys.getenv("DB_USERNAME")
-password <- Sys.getenv("DB_PASSWORD")
-
-db_connection_string <- sprintf("PG:dbname=greenspace host=localhost user=%s password=%s port=5432", username, password)
+library(here)
+source(here("utils", "db_utils.R"))
 
 # Set random seed
 set.seed(42)
@@ -37,14 +33,13 @@ outer_cv_folds <- cv_spatial(
 )
 
 # Add outer fold allocations to dfs
-df_full$outer_loop_fold_id_r <- outer_cv_folds$folds_ids            # R indexes from 1
+df_full$outer_loop_fold_id_r <- outer_cv_folds$folds_ids # R indexes from 1
 df_fe$outer_loop_fold_id_r <- outer_cv_folds$folds_ids
-df_full$outer_loop_fold_id_python <- outer_cv_folds$folds_ids - 1   # Python indexes from 0
+df_full$outer_loop_fold_id_python <- outer_cv_folds$folds_ids - 1 # Python indexes from 0
 df_fe$outer_loop_fold_id_python <- outer_cv_folds$folds_ids - 1
 
 # Create inner cross-validation folds
 for (fold in unique(outer_cv_folds$folds_ids)) {
-  
   # Get training set for current fold
   is_in_validation_set <- outer_cv_folds$folds_ids == fold
   is_in_training_set <- !is_in_validation_set
@@ -64,11 +59,10 @@ for (fold in unique(outer_cv_folds$folds_ids)) {
   df_fe[[paste0("inner_loop_", fold, "_fold_id_python")]] <- NA
 
   # Add inner fold ids to training rows
-  df_full[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_r")] <- inner_cv_folds$folds_ids            # R indexes from 1
+  df_full[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_r")] <- inner_cv_folds$folds_ids # R indexes from 1
   df_fe[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_r")] <- inner_cv_folds$folds_ids
-  df_full[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_python")] <- inner_cv_folds$folds_ids - 1   # Python indexes from 0
+  df_full[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_python")] <- inner_cv_folds$folds_ids - 1 # Python indexes from 0
   df_fe[is_in_training_set, paste0("inner_loop_", fold, "_fold_id_python")] <- inner_cv_folds$folds_ids - 1
-
 }
 
 # Save output
