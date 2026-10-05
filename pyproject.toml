@@ -1,0 +1,6 @@
+[tool.isort]
+profile = "black"
+known_first_party = ["utils"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"

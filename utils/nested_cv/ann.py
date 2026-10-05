@@ -1,10 +1,11 @@
 import numpy as np
 import tensorflow.keras as keras
+
 from utils.model_utils import (
-    separate_features,
-    split_data,
     get_evaluation_metrics,
     get_optimal_hyperparameters,
+    separate_features,
+    split_data,
 )
 
 

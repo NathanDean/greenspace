@@ -1,11 +1,12 @@
 import numpy as np
 from mgwr.gwr import GWR
 from mgwr.sel_bw import Sel_BW
+
 from utils.model_utils import (
-    separate_features,
-    split_data,
     get_evaluation_metrics,
     get_optimal_hyperparameters,
+    separate_features,
+    split_data,
 )
 
 
